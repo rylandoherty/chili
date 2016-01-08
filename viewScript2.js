@@ -1,4 +1,4 @@
-kjfdsk
+
 angular.module('ngViewExample', ['ngRoute', 'ngAnimate'])
 
 .config(['$routeProvider', '$locationProvider',

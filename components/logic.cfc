@@ -1,173 +1,170 @@
 <cfcomponent>
 	<cfscript>
 	
-		public void function findingTargetColumns(data){
-			var colList = {};
-			
-			for(var row in data){
-				for(var col in row){
-					if(ArrayContains(targetColumns,row[col])){
-						structInsert(colList,row[col], col);
-					}
-				}
-				if(structCount(colList)==arrayLen(targetColumns)){
-					break;
-				}
-			}
-		}
-		public void function organizeComm(newData,upgData,insData,sales){
-			
-			
-			var stupidArray = [newData,upgData];
-			for(var things in stupidArray){
-				
-			
-			for(var row in things){
-				if(row['Original']=="Original"||len(row['Customer Name'])==0){
-					continue;
-				}
-				var thisName = row['Customer Name'];
-			
-				var thatNumber = "";
-				var thisNumber = replace(row['Original'],"-","","all");
-				if(StructKeyExists(row,"MOBIL")){
-					thatNumber = replace(row['MOBIL'],"-","","all");
-				}
-				else if(StructKeyExists(row,"Mobile ID")) {
-					thatNumber = replace(row['Mobile ID'],"-","","all");
-				}
-				
-				thatNumber = replace(thatNumber,"c","","all");
-				thatNumber = replace(thatNumber," ","","all");
-				
-					var isit = false;
-					for(var row2 in sales){
-						
-						
-						
-						if(StructKeyExists(sales[row2],"Phone Number")&&isArray(sales[row2]['Phone Number'])){
-							
-						if(Arraycontains(sales[row2]['Phone Number'], thisNumber)||Arraycontains(sales[row2]['Phone Number'], thatNumber)){
-						
-						if(checkDates(row['Date'],sales[row2]['Sold On'])){
-							var fin = trimDollarsAndNegatives(row['Receivable']);
-							var comm = 0;
-							if(structkeyexists(row,"Cmsn 95%")){
-								comm = trimDollarsAndNegatives(row['Cmsn 95%']);
-								comm = comm+trimDollarsAndNegatives(row['ADC 95%']);
-							}
-							else if(structkeyexists(row,"Comn 95%")){
-								comm = trimDollarsAndNegatives(row['Comn 95%']);
-								comm = comm+trimDollarsAndNegatives(row['ADC 95%']);
-							}
-							
-							scope.salesDatabase[row2]['VZWFin']= scope.salesDatabase[row2]['VZWFin']+ fin;
-							scope.salesDatabase[row2]['VZWComm']= scope.salesDatabase[row2]['VZWComm']+ comm;
-						
-							isit = true;
-							break;
-						}
-						
-						
-						
-							}
-					
-					}
-					}
-					if(!isit){
-						for(var row2 in sales){
-						
-						
-						
-						if(StructKeyExists(sales[row2],"Customer Name")){
-								
-							if(checkNames(sales[row2]['Customer Name'],thisName)>.8){
-						
-						//writeOutput(thisName&"   "&sales[row2]['Customer Name']);
-						//writeOutput("<br/>");
-						
-						if(checkDates(row['Date'],sales[row2]['Sold On'])){
-							addToSale(row2,row);
-							findIfVZWandrq4Match(row2);
-							isit = true;
-							break;
-						}
-							}
-						
-						
-							}
-					
-					}
-					if(!isit){
-						//writeOutput(thisName&"  ---------");
-						//writeOutput("<br/>");
-						isit=true;
-						writeOutput("<br/>");
-						writeDump(thisNumber);
-						}
-						
-						
-						
-					}
-					}
-					//writeDump(scope.salesDatabase);
-					writeoutput("ALL DONE");
-		}
-		//writeDump(scope.salesDatabase);
-		}
-		public void function addToSale(saleDBRow,vzwRow){
-				var fin = trimDollarsAndNegatives(vzwRow['Receivable']);
-				var comm = 0;
-					if(structkeyexists(vzwRow,"Cmsn 95%")){
-						comm = trimDollarsAndNegatives(vzwRow['Cmsn 95%']);
-						comm = comm+trimDollarsAndNegatives(vzwRow['ADC 95%']);
-					}
-					else if(structkeyexists(vzwRow,"Comn 95%")){
-						comm = trimDollarsAndNegatives(vzwRow['Comn 95%']);
-						comm = comm+trimDollarsAndNegatives(vzwRow['ADC 95%']);
-					}
-					
-					scope.salesDatabase[saleDBRow]['VZWFin']= scope.salesDatabase[saleDBRow]['VZWFin']+ fin;
-					scope.salesDatabase[saleDBRow]['VZWComm']= scope.salesDatabase[saleDBRow]['VZWComm']+ comm;
+		public any function testGet(){
+			spititout = EntityLoad( "sales" );
+			writeDump(spititout);
 		}
 		
 		public any function organizeSales(rq4Data,finData){
 			 
-    		 
+    		 ORMReload();
     		//CHECKING FOR BLANK ROWS in SALES BY INVOICE SHEET
     		for(var sales in finData){
     			if(sales['Sold By']!='Sold By'&&len(sales['Sold By'])){
     			//writedump(sales['Invoice ##']);
     			try { 
-    				newArtistObj = EntityNew('sales'); 
-				    newArtistObj.setid(sales['Invoice ##']);
-				    newArtistObj.setstore(sales['Invoiced By']); 
-				    newArtistObj.setEMPLOYEE(sales['Sold By']); 
-				    newArtistObj.setCUSTOMER(sales['Customer']); 
-				    newArtistObj.setDATE(sales['Created On']); 
-				    newArtistObj.setCOST(sales['Cost']); 
-				    newArtistObj.setSALES(sales['Sales']); 
-				    newArtistObj.setPROFIT(sales['Gross Profit']); 
-				    newArtistObj.setFINANCED(sales['VZW Financed Amt']); 
-				    newArtistObj.setCASH(sales['Cash']); 
+    				
+    				
+    				
+    				newSale = EntityNew('sales');
+    				
+				    newSale.setsalesid(sales['Invoice ##']);
+				    newSale.setSTORE(0); 
+				    newSale.setEMPLOYEE(sales['Sold By']); 
+				    newSale.setCUSTOMER(sales['Customer']); 
+				    	
+				    newSale.setDATE(sales['Created On']); 
+				    newSale.setCOST(sales['Cost']); 
+				    newSale.setSALES(sales['Sales']); 
+				    newSale.setPROFIT(sales['Gross Profit']); 
+				    newSale.setFINANCED(sales['VZW DEVICE PAYMENT AMT.']); 
+				    newSale.setCASH(sales['Cash']); 
 				    
 				   
-				    newArtistObj.setCOMMENTS(sales['Invoice Comments']); 
-				    EntitySave(newArtistObj); 
+				    newSale.setCOMMENTS(sales['Invoice Comments']); 
+				    EntitySave(newSale); 
 				    ormflush(); 
 				} catch(Exception ex) { 
     				WriteOutput("<p>#ex.message#</p>"); 
 					} 
     			
     			}
-    			//writedump(sales);
+    			}
+    			
+    			
+    			for(var sales in rq4Data){
+    			if(sales['Sold As Used']!='Sold As Used'&&len(sales['Sold As Used'])){
+    			//writedump(sales['Invoice ##']);
+    			try { 
+    				var allOfSales = EntityLoad( "sales" );
+    				//writedump(allOfSales);
+    			
+    				var theInvoice = entityLoad( "sales", sales['Invoice ##'] , true );
+    				writedump(theInvoice);
+    				if(theInvoice.hasSaledetails()){
+	    				
+	    				 
+	    				var soldItemArray = theInvoice.getSaledetails();
+    				for(var itemSold in soldItemArray){
+	    					if(itemSold.getTRACKINGNUMBER() == sales['Tracking ##']&&itemSold.getproductsku() == sales['Product SKU']&& itemSold.getinvoice() == sales['Invoice ##']){
+	    						//writeoutput(25);
+	    						}
+	    				}
+	    				
+	    				
+	    				for(var itemSold in soldItemArray){
+	    					if(itemSold.getTRACKINGNUMBER() == sales['Tracking ##']&&itemSold.getproductsku() == sales['Product SKU']&& itemSold.getinvoice() == sales['Invoice ##']){
+	    						//writeoutput(25);
+	    						}
+	    					//writeoutput(2);
+	    					//writedump(itemSold);
+	    					//writedump(itemSold.getTRACKINGNUMBER());
+		    				if(itemSold.getTRACKINGNUMBER() != sales['Tracking ##']||itemSold.getproductsku() != sales['Product SKU']|| itemSold.getinvoice() != sales['Invoice ##']){
+		    					//top
+		    					//writeoutput(3);
+		    					
+			    				newItemSold = EntityNew('saledetails'); 
+			    				//newItemSold.addSALESID(theInvoice);
+							    newItemSold.setINVOICE(sales['Invoice ##']); 
+							    newItemSold.setPRODUCTSKU(sales['Product SKU']);
+							    newItemSold.setPRODUCTNAME(sales['Product Name']); 
+							    newItemSold.setTRACKINGNUMBER(sales['Tracking ##']); 
+							    newItemSold.setREFUND(sales['Refund']);
+							    newItemSold.setQUANTITY(sales['Qty']); 
+							    newItemSold.setTOTALCOST(sales['Total Cost']); 
+							    newItemSold.setSOLDFOR(sales['Sold For']); 
+							    newItemSold.setGROSSPROFIT(sales['Gross Profit']); 
+							    newItemSold.setCATEGORY(sales['Category']); 
+							    newItemSold.setUSED(sales['Sold As Used']); 
+							    newItemSold.setCOMMENTS(sales['Invoice Comments']); 
+							   
+							    EntitySave(newItemSold); 
+							     ormflush(); 
+							    //bottom
+							    
+			    				theInvoice.addSaledetails(newItemSold);
+			    				EntitySave(theInvoice);
+						    	ormflush(); 
+						    	writeoutput("solditemarray");
+						    	writedump(solditemarray);
+						    	break;
+		    				}
+		    				else{
+		    					
+					    	}
+					    }
+				    }
+				    else{
+				    	entityName = EntityNew('saledetails'); 
+			    				//newItemSold.addSALESID(theInvoice);
+							    
+							    entityName.setINVOICE(sales['Invoice ##']); 
+							    entityName.setPRODUCTSKU(sales['Product SKU']);
+							    entityName.setPRODUCTNAME(sales['Product Name']); 
+							    entityName.setTRACKINGNUMBER(sales['Tracking ##']); 
+							    entityName.setREFUND(sales['Refund']);
+							    entityName.setQUANTITY(sales['Qty']); 
+							    entityName.setTOTALCOST(sales['Total Cost']); 
+							    entityName.setSOLDFOR(sales['Sold For']); 
+							    entityName.setGROSSPROFIT(sales['Gross Profit']); 
+							    entityName.setCATEGORY(sales['Category']); 
+							    entityName.setUSED(sales['Sold As Used']); 
+							    entityName.setCOMMENTS(sales['Invoice Comments']);
+							    //entityName.addSALES(sales['Invoice ##']);
+							    EntitySave(entityName); 
+							     ormflush(); 
+							    
+							    
+			    				theInvoice.addsaledetails(entityName);
+			    				EntitySave(theInvoice);
+						    	ormflush(); 
+						    	
+				    }
+				} catch(Exception ex) { 
+    				WriteOutput("<p>#ex.message#</p>"); 
+					} 
+    			
+    			}
+    			
     			//writedump(finData['Created On']);
     			//writedump(Chr(10)&Chr(13));
     			//writedump(finData['Sold By Username']);
     			
     		} 
+			spititout = EntityLoad( "sales" );
+			writeDump(spititout);
+		
+		return "";
+		}
+		public any function makeInvoice(entityName, sales){
+			//newItemSold.addSALESID(theInvoice);
+								entityName.setINVOICE(sales['Invoice ##']); 
+							    entityName.setPRODUCTSKU(sales['Product SKU']);
+							    entityName.setPRODUCTNAME(sales['Product Name']); 
+							    entityName.setTRACKINGNUMBER(sales['Tracking ##']); 
+							    entityName.setREFUND(sales['Refund']);
+							    entityName.setQUANTITY(sales['Qty']); 
+							    entityName.setTOTALCOST(sales['Total Cost']); 
+							    entityName.setSOLDFOR(sales['Sold For']); 
+							    entityName.setGROSSPROFIT(sales['Gross Profit']); 
+							    entityName.setCATEGORY(sales['Category']); 
+							    entityName.setUSED(sales['Sold As Used']); 
+							    entityName.setCOMMENTS(sales['Invoice Comments']); 
+			return entityName;
 			
-			
+		}
+		
 			 
 			
 			/*scope.salesDatabase= {};	
@@ -255,10 +252,7 @@
 				}
 			}
 			writeDump(scope.salesDatabase);*/
-			return "";
-				
-		}
-		
+			
 		public boolean function checkDates(vzwdate,rq4Date){
 			var month = ListGetAt(vzwdate,1,"/");
 			var day = ListGetAt(vzwdate,2,"/");
@@ -342,6 +336,8 @@
 			else{
 			return (inCommon/totalCount2);}
 		}
+		
+		
 		public void function addUpMoney(row, column){
 			if(find("$",row[column],1)>0&&len(row['Tracking ##'])==10&&column=="Total Sales"){
 						var salePrice = trimDollarsAndNegatives(row[column]);

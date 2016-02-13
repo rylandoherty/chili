@@ -8,14 +8,14 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="/viewScript2.js"></script>
 	<script src="/ng/chili.js"></script>
-	
+	<script src="/js/items2.js"></script>
 	
 	
 
 	<cfajaxproxy cfc="components.login" jsclassname="jsLogin" >
 	
 	<cfscript> 
-		 
+		
 
 </cfscript>
 
@@ -33,13 +33,10 @@
 	
 	<script type="text/javascript">
 	var e = new jsLogin();
-	
+	var theReturn = e.xyz();
+	//console.log(theReturn);
     angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />'));
-    
-    if(window.location.hash==="#home"){
-    	console.log("it was true!");
-    }
-    console.log(window.location.hash);
+   
   </script>
   
   
@@ -48,29 +45,7 @@
 
 
 	<body>
-		<!---
-<cfquery name="qCreateTable"  datasource="greenchili">
-    CREATE TABLE Sales (
-                            id varchar(255) NOT NULL PRIMARY KEY,
-                            store varchar(255),
-                            employee varchar(255),
-                            customer varchar(255),
-                            date varchar(255),
-                            cost varchar(255),
-                            sales varchar(255),
-                            profit varchar(255),
-                            financed varchar(255),
-                            cash varchar(255),
-                            card varchar(255),
-                            tradein varchar(255),
-                            comments varchar(255)
-                            
-                            )
-</cfquery>--->
 		
-			
-    	<!---<cfset cookieStatus = jslogin.findCookie()>
-    	--->
 		
     	<body  ng-app=ngViewExample>
     		
@@ -86,13 +61,7 @@
 		</ul>
 
 <div ng-controller="MainCtrl as main">
- <cfform ng-if="main.$route.current.templateUrl=='upload.cfm'" action="/components/form.cfm" enctype="multipart/form-data" method="post">
- 
-    <input type="file" name="rq4file" />
-    
-     <input type="file" name="finfile" />
-    <input type="submit" value="Submit" name="submit" />
-</cfform> 
+
   
   <div class="view-animate-container">
     <div ng-view class="view-animate">
@@ -106,20 +75,72 @@
   <pre>$route.current.templateUrl = {{main.$route.current.templateUrl}}</pre>
   <pre>$route.current.params = {{main.$route.current.params}}</pre>
   <pre>$routeParams = {{main.$routeParams}}</pre>
+  <cfoutput> #StructKeyList(Session)# </cfoutput> 
   --->
 </div>
 </body>
    
 		
-    	<cfoutput> #StructKeyList(Session)# </cfoutput> 
+    	
 		
-		<div id="footer">hey</div>
+		<div id="footer"></div>
 	</body>
-	<script type="application/javascript" >
-		//window.location.hash = ("cows");
-	</script>
+	
 	
 
 
 	
 </html>
+		<cfscript>
+			 dateRQ = "November 3, 2016 2:56 PM";
+			dateArray= [];
+			 month ="";
+			 day ="";
+			 year= "";
+			 time= "";
+			 count = 1;
+			for( i=1;i<Len(dateRQ);i++){
+					if(dateRQ.charAt(i)==" "){
+						
+						writeOutput(dateRQ.charAt(i)&"YES"&i);
+						if(count == 1){
+							month = left(dateRQ,i);
+							count++;
+						}
+						else if(count == 2){
+							if(dateRQ.charAt(i-3)==" "){
+								
+								day = dateRQ.charAt(i-2);
+							}
+							else{
+								day = mid(dateRQ,i-2,2);
+							}
+							count++;
+						}
+						else if(count == 3){
+							year = mid(dateRQ,i-3,4);
+							count++;
+						}
+						else if(count == 4){
+							if(dateRQ.charAt(i-5)==" "){
+							time = mid(dateRQ,i-3,7);	
+							}
+							else{
+							time = mid(dateRQ,i-4,8);	
+							}
+							
+						}
+						
+					}
+				
+			}
+			writeoutput('<br/>'&month&'<br/>');
+			writeoutput(day&'<br/>');
+			writeoutput(year&'<br/>');
+			writeoutput(time&'<br/>');
+		</cfscript>
+		
+		
+		
+			
+		

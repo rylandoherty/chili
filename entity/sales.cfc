@@ -1,5 +1,6 @@
 <cfcomponent persistent="true" entityname="Sales" table="Sales"> 
-    <cfproperty name="id"> 
+    <cfproperty name="salesid" fieldtype="id"> 
+    <cfproperty name="saledetails" fieldtype="one-to-many" cfc="saledetails" fkcolumn="salesid">
     <cfproperty name="STORE"> 
     <cfproperty name="EMPLOYEE"> 
     <cfproperty name="CUSTOMER"> 

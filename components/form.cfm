@@ -79,11 +79,12 @@
 		
 		 logic = createObject("component", "logic");
 		
-		
-		numberStruct = logic.organizeSales(rq4Data,finData);
+		//numberStruct = logic.testGet();
+		numberStruct =  logic.organizeSales(rq4Data,finData);
 		
 		
 		//myReturn = TheObject.findingTargetColumns(data);
+		
 	</cfscript>
 	
 	

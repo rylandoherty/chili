@@ -51,14 +51,23 @@
     newArtistObj.setemail("jsmith@company.com"); 
     newArtistObj.setThePassword("jsmith"); 
     EntitySave(newArtistObj); 
+    
     ormflush(); 
 } catch(Exception ex) { 
     WriteOutput("<p>#ex.message#</p>"); 
 } 
 	}
-	remote void function xyz(){
+	remote any function xyz(){
 	try { 
-    
+		var newSale = EntityLoad('sales');
+		
+		for(var i = 1;i<=arraylen(newSale);i++){
+			newSale[i]['saledetails'] = newSale[i].getsaledetails();
+		}
+		
+		var abc = serializeJson(newSale);
+		//writeoutput(abc);
+    return newSale;
 } catch(Exception ex) { 
     WriteOutput("<p>#ex.message#</p>"); 
 } 

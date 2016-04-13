@@ -1,0 +1,57 @@
+
+
+<div>
+ Search
+ <input type="checkbox" ng-model="showHidden" value="false">show Hidden</input> 
+  <input ng-model="typer">
+  </input>
+    
+   
+  <table>
+  	<tr >
+  		<b>
+  	<td><b>SKU </b></td>
+  	<td style="width:250px" ><b>Name </b></td>
+  	<td>Hidden</td>
+    <td><b>Desired<br> Count<br> HFX</b></td>	
+    <td><b>Desired<br> Count<br> EBW</b></td>
+  	<td><b>Desired<br> Count<br> FRA </b></td>
+  	<td style="width:75px"><b>Cost</b></td>
+    </b>
+    </tr>
+  <tr ng-model="typer" ng-repeat="x in productList | filter:typer|orderBy:'toString()'" ng-if="x['hidden']!=true||showHidden==true" >
+  	<td>{{ x['productlistid']}}</td>
+  	<td> {{ x['name']}}</td>
+    <td><input ng-model="x['hidden']" ng-change="changeHidden($index,x['hidden'])" type="checkbox" value="{{ x['hidden']}}">></td>
+    
+    <td><p style="font-size:x-large"> {{ x['stockFufillHalifax']}}</p><img ng-click="changeStock($index , 'HFX','1')" src="../img/plus.png" alt="Add" style="width:15px;height:15px;">
+    	<img ng-click="changeStock($index , 'HFX','0')" src="../img/minus.png" alt="Minus" style="width:15px;height:15px;"></td>
+    <td><p style="font-size:x-large">{{ x['stockFufillBridgewater']}}</p><img ng-click="changeStock($index , 'EBW','1')" src="../img/plus.png" alt="Add" style="width:15px;height:15px;">
+    	<img ng-click="changeStock($index , 'EBW','0')" src="../img/minus.png" alt="Minus" style="width:15px;height:15px;"></td>
+    <td><p style="font-size:x-large">{{ x['stockFufillFranklin']}}</p><img ng-click="changeStock($index , 'FRA','1')" src="../img/plus.png" alt="Add" style="width:15px;height:15px;">
+    	<img ng-click="changeStock($index , 'FRA','0')" src="../img/minus.png" alt="Minus" style="width:15px;height:15px;"></td>
+    <td style="width:75px"><input style="width:75px" ng-model="x['cost']" ng-change="changeCost($index,x['cost'])"  type="text" maxlength="8"
+    width=5  value="{{ x['cost']}}"></input></td>
+    
+   
+    
+   
+  </tr>
+   
+</table>
+</div>
+
+
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

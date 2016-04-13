@@ -1,3 +1,4 @@
+
 <cfcomponent>
 	<cfscript>
 	
@@ -9,22 +10,29 @@
 		public any function organizeSales(rq4Data,finData){
 			 
     		 ORMReload();
+    		 
+    		 
+    		var invoiceToSkip = [];
     		//CHECKING FOR BLANK ROWS in SALES BY INVOICE SHEET
     		for(var sales in finData){
     			if(sales['Sold By']!='Sold By'&&len(sales['Sold By'])){
     			//writedump(sales['Invoice ##']);
     			try { 
     				
+    				var theInvoice = entityLoad( "sales", sales['Invoice ##'] , true );
+    				if(isDefined("theInvoice")){
     				
-    				
+    				arrayAppend(invoiceToSkip,sales['Invoice ##']);
+    				}
+    				else{
     				newSale = EntityNew('sales');
     				
 				    newSale.setsalesid(sales['Invoice ##']);
 				    newSale.setSTORE(0); 
 				    newSale.setEMPLOYEE(sales['Sold By']); 
 				    newSale.setCUSTOMER(sales['Customer']); 
-				    	
-				    newSale.setDATE(sales['Created On']); 
+				    	fixtime(sales['Created On']);
+				    newSale.setDATE(fixtime(sales['Created On'])); 
 				    newSale.setCOST(sales['Cost']); 
 				    newSale.setSALES(sales['Sales']); 
 				    newSale.setPROFIT(sales['Gross Profit']); 
@@ -34,6 +42,8 @@
 				   
 				    newSale.setCOMMENTS(sales['Invoice Comments']); 
 				    EntitySave(newSale); 
+				    }
+				    
 				    ormflush(); 
 				} catch(Exception ex) { 
     				WriteOutput("<p>#ex.message#</p>"); 
@@ -42,37 +52,51 @@
     			}
     			}
     			
+    			var memInvoiceNumber = 1;
     			
     			for(var sales in rq4Data){
+    				var memInvoiceNumber = 1;
     			if(sales['Sold As Used']!='Sold As Used'&&len(sales['Sold As Used'])){
-    			//writedump(sales['Invoice ##']);
+    		
     			try { 
     				var allOfSales = EntityLoad( "sales" );
-    				//writedump(allOfSales);
-    			
+    				for(var invoice in invoiceToSkip){
+    					
+    					if(sales['Invoice ##'] == invoice){
+    					memInvoiceNumber = 0;	
+    					}
+    					
+    					
+    					
+    				}
+    			   if (memInvoiceNumber == 0){
+    			   	writeOutput("SKIP!");
+    			   }
+    			   else{
     				var theInvoice = entityLoad( "sales", sales['Invoice ##'] , true );
-    				writedump(theInvoice);
+    				//writeDump(theInvoice);
+    				//writeDump(theInvoice.getSaledetails());
+    				/*if(arrayLen(theInvoice) && !len(memInvoiceNumber)){
+    					writeOutput("Hey");
+    				}*/
     				if(theInvoice.hasSaledetails()){
 	    				
 	    				 
 	    				var soldItemArray = theInvoice.getSaledetails();
     				for(var itemSold in soldItemArray){
 	    					if(itemSold.getTRACKINGNUMBER() == sales['Tracking ##']&&itemSold.getproductsku() == sales['Product SKU']&& itemSold.getinvoice() == sales['Invoice ##']){
-	    						//writeoutput(25);
+	    						
 	    						}
 	    				}
 	    				
 	    				
 	    				for(var itemSold in soldItemArray){
 	    					if(itemSold.getTRACKINGNUMBER() == sales['Tracking ##']&&itemSold.getproductsku() == sales['Product SKU']&& itemSold.getinvoice() == sales['Invoice ##']){
-	    						//writeoutput(25);
+	    						
 	    						}
-	    					//writeoutput(2);
-	    					//writedump(itemSold);
-	    					//writedump(itemSold.getTRACKINGNUMBER());
+	    					
 		    				if(itemSold.getTRACKINGNUMBER() != sales['Tracking ##']||itemSold.getproductsku() != sales['Product SKU']|| itemSold.getinvoice() != sales['Invoice ##']){
-		    					//top
-		    					//writeoutput(3);
+		    					
 		    					
 			    				newItemSold = EntityNew('saledetails'); 
 			    				//newItemSold.addSALESID(theInvoice);
@@ -96,8 +120,7 @@
 			    				theInvoice.addSaledetails(newItemSold);
 			    				EntitySave(theInvoice);
 						    	ormflush(); 
-						    	writeoutput("solditemarray");
-						    	writedump(solditemarray);
+						    	
 						    	break;
 		    				}
 		    				else{
@@ -107,7 +130,7 @@
 				    }
 				    else{
 				    	entityName = EntityNew('saledetails'); 
-			    				//newItemSold.addSALESID(theInvoice);
+			    				
 							    
 							    entityName.setINVOICE(sales['Invoice ##']); 
 							    entityName.setPRODUCTSKU(sales['Product SKU']);
@@ -121,7 +144,7 @@
 							    entityName.setCATEGORY(sales['Category']); 
 							    entityName.setUSED(sales['Sold As Used']); 
 							    entityName.setCOMMENTS(sales['Invoice Comments']);
-							    //entityName.addSALES(sales['Invoice ##']);
+							   
 							    EntitySave(entityName); 
 							     ormflush(); 
 							    
@@ -131,19 +154,16 @@
 						    	ormflush(); 
 						    	
 				    }
-				} catch(Exception ex) { 
+				}} catch(Exception ex) { 
     				WriteOutput("<p>#ex.message#</p>"); 
 					} 
     			
     			}
     			
-    			//writedump(finData['Created On']);
-    			//writedump(Chr(10)&Chr(13));
-    			//writedump(finData['Sold By Username']);
+    			
     			
     		} 
-			spititout = EntityLoad( "sales" );
-			writeDump(spititout);
+			
 		
 		return "";
 		}
@@ -166,6 +186,123 @@
 		}
 		
 			 
+			public any function setInventory(inventoryData){
+				
+				var oldStock = EntityLoad('inventory');
+				for(var i = 1;i<=arrayLen(oldStock);i++){
+					entityDelete(oldStock[i]);
+					
+				}
+				ormFlush();
+					
+					
+								for(var item in inventoryData){
+    			if(item['Product Name']!='Product Name'&&len(item['Product Name'])){
+	    			
+	    			try{ 
+	    				if(len(item['Tracking ##'])){
+	    					var productListQuery = entityLoad( "productlist", item['Product SKU'] , true );
+			    			if(!isDefined("productListQuery")){
+			    				var productList = EntityNew('productList');
+							    productList.setproductlistid(item['Product SKU']);
+							    productList.setname(item['Product Name']); 
+							    productList.sethidden(false);
+							    productList.setcategory(item['Category']); 
+							    productList.setstockFufillHalifax(0);
+							    productList.setstockFufillBridgewater(0); 
+							    productList.setstockFufillFranklin(0);
+							    productList.setcost(0);
+							    EntitySave(productList); 
+							    ormflush();
+			    				}
+	    					
+		    				var productInList = EntityLoad('productList', item['Product SKU'],true );
+		    				
+		    				var product = EntityNew('inventory');
+						    product.setinventoryid(item['Tracking ##']);
+						    product.setstore(item['Location']);
+							product.setname(item['Product Name']); 
+							product.setcost(item['Total Cost']); 
+						    product.setproductSKU(item['Product SKU']); 
+						    
+						    EntitySave(product); 
+						    
+						    productInList.addInventory(product);
+						    
+						    entitySave(productInList);
+						    ormflush(); 
+					    }
+					    
+					    
+					} catch(Exception ex) { 
+	    				WriteOutput("<p>#ex.message#</p>"); 
+						} 
+	    			
+	    			
+	    			}
+    			
+    					
+    					
+				
+			} 
+			
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			/*scope.salesDatabase= {};	
 			scope.salesSettled = {};
@@ -380,6 +517,100 @@
 			withoutDollar=(left(withoutDollar,len(withoutDollar)-1))*-1;
 			}
 			return withoutDollar;
+		}
+		
+		remote any function fixTime(xx){
+			var dateRQ = xx;
+			var codeMonth = [["Jan",00],
+					["Feb",01],
+					["Mar",02],
+					["Apr",03],
+					["May",04],
+					["Jun",05],
+					["Jul",06],
+					["Aug",07],
+					["Sep",08],
+					["Oct",09],
+					["Nov",10],
+					["Dec",11]];
+			 
+			var dateArray= [];
+			var month ="";
+			var day ="";
+			var year= "";
+			var time= "";
+			var hours = "";
+			var minutes = "";
+			
+			var count = 1;
+			for(var i=1;i<Len(dateRQ);i++){
+					if(dateRQ.charAt(i)==" "){
+						
+						
+						if(count == 1){
+							month = left(dateRQ,i);
+							for(var cmonth in codeMonth){
+								
+								if(month == cmonth[1]){
+									month = replace(cmonth[1],cmonth[1],cmonth[2]);
+								}
+								
+							}
+							count++;
+						}
+						else if(count == 2){
+							if(dateRQ.charAt(i-3)==" "){
+								
+								day = dateRQ.charAt(i-2);
+								day = "0"&day;
+							}
+							else{
+								day = mid(dateRQ,i-2,2);
+							}
+							count++;
+						}
+						else if(count == 3){
+							year = mid(dateRQ,i-3,4);
+							count++;
+						}
+						else if(count == 4){
+							if(dateRQ.charAt(i-5)==" "){
+								hours = mid(dateRQ,i-3,1);
+									
+								minutes = mid(dateRQ,i-1,2);		
+								if(mid(dateRQ,i+2,2)=="PM"&&hours!="12"){
+								
+									hours+=12;	
+								}
+							}
+							else{
+								
+								hours = mid(dateRQ,i-4,2);	
+								minutes = mid(dateRQ,i-1,2);
+								PM = mid(dateRQ,i+2,2);
+									
+								if(mid(dateRQ,i+2,2)=="PM"&&hours!="12"){
+								
+								hours+=12;	
+								}
+								if(mid(dateRQ,i+2,2)=="AM"&&hours=="12"){
+								
+								hours="00";	
+								}
+								
+							}
+							
+							if(len(hours)==1){
+								hours = "0"&hours;
+							}
+						}
+						
+					}
+				
+			}
+			
+			fulltimecode = year&month&day&hours&minutes;
+			return fulltimecode;
 		}
 		
 	</cfscript>

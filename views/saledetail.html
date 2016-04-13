@@ -1,0 +1,46 @@
+
+
+<div>
+
+ 
+  
+  <table>
+  	<tr>
+  		<b>
+  			
+  		
+  	<td><b>QUANTITY </b></td>
+    <td><b>PRODUCTNAME </b></td>
+    <td><b>GROSSPROFIT </b></td>
+    <td><b>CATEGORY </b></td>
+    
+    </b>
+    </tr>
+  <tr ng-repeat="x in saleDetails">
+  	
+    
+    <td>{{ x.QUANTITY }}</td>
+    <td>{{ x.PRODUCTNAME }}</td>
+    <td>{{ x.GROSSPROFIT }}</td>
+    <td>{{ x.CATEGORY }}</td>
+  </tr>
+</table>
+</div>
+<script>
+  		
+   
+  	</script>
+
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

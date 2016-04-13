@@ -1,0 +1,61 @@
+
+
+<div>
+  Search
+  <input ng-model="typer">
+  </input>
+  <br>
+    
+   
+  <table ng-init="store = ''">
+  	<tr>
+  		<button ng-click="store='0'" >
+  			HALIFAX
+  		</button>
+  		<button ng-click="store='1'" >
+  			EAST BRIDGEWATER
+  		</button>
+  		<button ng-click="store='2'" >
+  			FRANKLIN
+  		</button>    
+  		<div ng-if="store=='0'">HALIFAX   ${{inventory.listOfModels.sumCost[0]}}</div>
+  		<div ng-if="store=='1'">EAST BRIDGEWATER    ${{inventory.listOfModels.sumCost[1]}}</div>
+  		<div ng-if="store=='2'">FRANKLIN    ${{inventory.listOfModels.sumCost[2]}}</div>
+  		
+  		<b>
+  	<td><b>ITEM </b></td>
+  	<td><b>IN STOCK </b></td>
+  	<td><b>STOCK TO KEEP </b></td>
+  	
+    <td><b>Number<br>to Order</b></td>	
+    <td><b>TOTAL Cost </b></td>
+  </b>
+    </tr>
+  <tr ng-model="typer"  ng-repeat="x in inventory.listOfModels | filter:typer|orderBy:'toString()'" ng-if="x[3][store]>0" >
+  	
+    <td>{{x[1]}}</td>
+    <td>{{ x[2][store]}}</td>
+    <td>{{ x[5][store]}}</td>
+    
+    <td>{{ x[3][store]}}</td>
+    <td>{{x[4][store]}}</td>
+  </tr>
+</table>
+</div>
+
+  <div ng-repeat="x in inventory.listOfModels | filter:typer|orderBy:'toString()'" ng-if="x[3][store]>0" >
+	{{x[3][store]}}----{{ x[1] }}    
+	</div>
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

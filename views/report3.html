@@ -1,0 +1,55 @@
+
+
+<div>
+  time: {{}}
+  data: {{report.params}}<br>
+    <a href="Store/{{report.params.storeId}}/Report/Today">Today</a> |
+  <a href="Store/{{report.params.storeId}}/Report/Yesterday">Yesterday</a>|
+  
+   <a href="/Upload"> Upload</a> 
+  <table>
+  	<tr>
+  		<b>
+  			
+  	<td><b>DATE </b></td>
+    <td><b>TIME</b></td>	
+  	<td><b>salesid</b></td>
+    
+    <td><b>EMPLOYEE</b> </td>
+    <td><b>CUSTOMER </b></td>
+ 
+    <td><b>PROFIT </b></td>
+    
+    <td><b>ITEMS </b></td>
+    </b>
+    </tr>
+  <tr ng-repeat="x in showSales">
+  	<td>{{ x.SHORTDATE}}</td>
+    <td>{{x.TIME}}</td>
+    <td>{{ x.salesid }}</td>
+    
+    <td>{{ x.EMPLOYEE }}</td>
+    <td>{{ x.CUSTOMER }}</td>
+    
+    <td>{{ x.PROFIT }}</td>
+    <td><a ng-click="invoice(x.saledetails)" href="{{main.$location.path()}}/Invoice/{{x.salesid}}">Items</a> | </td>
+   
+  </tr>
+   
+</table>
+</div>
+
+
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

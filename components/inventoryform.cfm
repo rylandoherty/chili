@@ -11,28 +11,27 @@
 
 
 <cfset dest = getTempDirectory()>
-<cffile action="upload" destination="#dest#" filefield="rq4file" result="rq4file"
+<cffile action="upload" destination="#dest#" filefield="inventoryFile" result="inventoryFile"
         nameconflict="makeunique">
-<cffile action="upload" destination="#dest#" filefield="finfile" result="finfile"
-        nameconflict="makeunique">
+
         
-<cfif rq4file.fileWasSaved and finfile.fileWasSaved>
-	<cfset rq4 = rq4file.serverDirectory & "/" & rq4file.serverFile>
-	<cfset fin = finfile.serverDirectory & "/" & finfile.serverFile>
+<cfif inventoryFile.fileWasSaved >
+	<cfset inventory = inventoryFile.serverDirectory & "/" & inventoryFile.serverFile>
 	
-	<cfif isSpreadsheetFile(rq4) and isSpreadsheetFile(fin)>
-		<cfspreadsheet action="read" src="#rq4#" query="rq4Data" headerrow="3">
-		<cfspreadsheet action="read" src="#fin#" query="finData" headerrow="3">
+	
+	<cfif isSpreadsheetFile(inventory)>
+		<cfspreadsheet action="read" src="#inventory#" query="inventoryData" headerrow="3">
+		
 	
 	
 		               
-		<cffile action="delete" file="#rq4#">
-		<cffile action="delete" file="#fin#">
+		<cffile action="delete" file="#inventory#">
+		
 	
 		<cfset showForm = false>
 	<cfelse>
-		<cffile action="write" file="#rq4#" output="" addnewline="false"/>
-		<cffile action="write" file="#fin#" output="" addnewline="false"/>
+		<cffile action="write" file="#inventory#" output="" addnewline="false"/>
+		
 		
 		<cfset errors = "One or More of the files was not an Excel file.">
 	</cfif>
@@ -65,7 +64,7 @@
 		}
 	</style>
 	
-	<cfset metadata = getMetadata(rq4Data)>
+	<cfset metadata = getMetadata(inventoryData)>
 
 	<cfset colList = "">
 
@@ -80,18 +79,18 @@
 		 logic = createObject("component", "logic");
 		
 		//numberStruct = logic.testGet();
-		numberStruct =  logic.organizeSales(rq4Data,finData);
+		numberStruct =  logic.setInventory(inventoryData);
 		
 		
 		//myReturn = TheObject.findingTargetColumns(data);
 		
 	</cfscript>
 	<script type="text/javascript" >
-		window.location.href = "/Login";
+		//window.location.href = "/";
 	</script>
 	
 
-	<cfif rq4Data.recordCount is 1>
+	<cfif inventoryData.recordCount is 1>
 		<p>
 			This spreadsheet appeared to have no data.
 		</p>

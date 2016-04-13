@@ -57,6 +57,42 @@
     WriteOutput("<p>#ex.message#</p>"); 
 } 
 	}
+	remote void function bad(){
+		
+		
+		var logic = createObject("component", "logic");
+		logic.fixTime();
+		//numberStruct = logic.testGet();
+		//var numberStruct =  logic.fixTime();
+		//writeOutput(numberStruct);
+	}
+	remote any function loadInventory(){
+	try { 
+		var invList = EntityLoad('inventory');
+		
+		
+		
+		
+    return invList;
+} catch(Exception ex) { 
+    WriteOutput("<p>#ex.message#</p>"); 
+} 
+	}
+	
+	remote any function loadProductList(){
+	try { 
+		var productList = EntityLoad('productlist');
+		for(var i = 1;i<=arraylen(productList);i++){
+			productList[i]['inventory'] = productList[i].getInventory();
+		}
+		
+		
+		
+    return productList;
+} catch(Exception ex) { 
+    WriteOutput("<p>#ex.message#</p>"); 
+} 
+	}
 	remote any function xyz(){
 	try { 
 		var newSale = EntityLoad('sales');
@@ -67,7 +103,7 @@
 		
 		var abc = serializeJson(newSale);
 		//writeoutput(abc);
-    return newSale;
+    return abc;
 } catch(Exception ex) { 
     WriteOutput("<p>#ex.message#</p>"); 
 } 

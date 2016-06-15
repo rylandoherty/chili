@@ -1,3 +1,4 @@
+security = "";
 // Here we get the module we created in file one
 angular.module('ngViewExample')
 
@@ -26,32 +27,11 @@ function Ctrl2($scope, sharedProperties) {
 }
     
    
-    $scope.abc = $window.theReturn;
-      
     
-    $scope.code = [['Franklin','FRA'],['Bridgewater','EBR'],['Halifax','HAL']];
+
  	
   
   
-
-  $scope.salesByStore = [[],[],[]];
-  $scope.storeDetails = [[0],[0]];
-  $scope.bridgewater = [];
-  $scope.franklin = [];
-   $scope.halifax = [];
-  for(var sales in $scope.abc){
-  	//console.log($scope.abc[sales]['salesid']);
-  	for(var stores in $scope.code){
-  		//console.log(code[stores]);
-  		switch($scope.abc[sales]['salesid'].substring(0,3)){
-  			case $scope.code[stores][1]:
-  			$scope.salesByStore[stores].push($scope.abc[sales]);
-  			break;	
-  		}
-  	}
-  }
-  
- $scope.trex = getNewLines($scope.salesByStore);
 
  
 

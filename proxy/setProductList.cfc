@@ -1,22 +1,60 @@
 <cfcomponent>
 <cfscript>
-			remote any function setStock( SKU, location, addOrRemove){
+			remote any function setStock( SKU, location, count){
 				try { 
-			    var item = EntityLoad('productList',SKU,true);
+					
+			    var item = EntityLoad('productlist',SKU,true);
+			    var storeQuery = entityLoad( "store", location , true );
+			    var settingsQuery = entityLoad( "ordersettings");
 			    
 			    //writeDump(item); 
 			   // var locationCode = location;
 			    
-			    Evaluate("item.set"&location&"(item.get"&location&"()+"&addOrRemove&")");
 			    
-			    EntitySave(item); 
+			    if(isDefined("settings")){
+			    for(var sett in settingsQuery){
+			    	
+			    	if(location==settingsQuery[sett]['storename']&&SKU==settingsQuery[sett]['productsku']){
+			    		settingsQuery[sett].setdesiredcount(count);
+			    		entitySave(settingsQuery);
+			    		ormflush();
+			    	}
+			    	}
+			    	}
+			    	else {
+			    			
+	    					orderSetting = EntityNew('ordersettings');
+							   		orderSetting.setdesiredcount(count);
+							   		orderSetting.setstorename(location);
+							   		orderSetting.setproductsku(SKU);
+							   		EntitySave(orderSetting); 
+							   		ormflush();
+							    	storeQuery.addordersettings(orderSetting);
+							    	item.addordersettings(orderSetting);
+							    	entitySave(storeQuery);
+			    					EntitySave(item); 
+							    	ormflush();
+							    	
+					    }
+			    
+			    
 			    ormflush(); 
 			} catch(Exception ex) { 
 			    WriteOutput("<p>#ex.message#</p>"); 
 			} 
 	}
-	remote any function setCost(SKU, cost){
+	
+	remote any function setIcon(SKU, name){
+		writeDump(SKU);
 		var item = EntityLoad('productList',SKU,true);
+			
+            item.seticon("/img/"&name);
+            EntitySave(item);   
+            ormflush();
+		
+	}
+	remote void function setCost(SKU, cost){
+		var item = EntityLoad('productlist',SKU,true);
 			    
 			    //writeDump(item); 
 			   // var locationCode = location;
@@ -28,7 +66,7 @@
 		
 		
 	 
-			return serializeJSON(0);
+		
 		
 	}
 	
@@ -48,7 +86,7 @@
 			    ormflush(); 
 	}
 		
-	</cfscript>
+</cfscript>
 
 
 </cfcomponent>

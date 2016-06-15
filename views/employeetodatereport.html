@@ -1,0 +1,221 @@
+
+
+ <body >
+ 	
+ 
+  	<p>
+  		<select ng-model="emp" >
+  			
+  <option ng-repeat="user in users | orderBy:'toString()'" value="{{user['userid']}}">{{user['userid']}}</option>
+
+</select>
+  
+  	
+  <div>{{emp}}</div>
+  	<div ng-repeat="user in users" ng-if=" emp==user['userid'] ">
+  
+  	</div>
+  	<table>
+  		<tr>
+  			<td> <b>USER</b><br/></td>
+<td>  HOURS</td>  			
+<td> <b>TOTAL</b><br/> NEW LINES</td>
+<td> STRATEGIC </td>
+<td> <b>TOTAL</b><br/>BOXES</td>
+
+  		 		
+  		 		<td> PROFIT </td>
+  		 		<td> ACCESSORY PROFIT </td>
+  		 		<td> ACCESSORY COUNT </td>
+  		 		<td> XLPLAN </td>
+  		 		
+  		 		<td> INSURANCE </td>
+  		 		<td> INSURANCEPROFIT </td>
+  		 		
+  		 		
+  </tr>
+  		 
+  		 	<tr ng-repeat="user in users" >
+  		 		<td> {{user['userid']}} </td>
+  		 		<td><input style="width:75px" ng-model="user['hours']" ng-change="changeemphours(user['userid'],user['hours'])"  type="number" maxlength="8"
+    width=5 value="{{user['hours']}}" ></input></td>
+  		 		<td> {{user['TOTALNEW'].toFixed(2)}} </td>
+  		 		<td> {{user['STRATEGIC'].toFixed(2)}} </td>
+  		 		<td> {{user['TOTALBOXES'].toFixed(2)}} </td>
+  		 		<td> {{user['PROFIT'].toFixed(2)}} </td>
+  		 		<td >{{user['ACCESSORY'].toFixed(2)}}</td>
+  		 		<td >{{user['ACCESSORYCOUNT'].toFixed(2)}}</td>
+  		 		<td> {{user['XLPLAN'].toFixed(2)}} </td>
+  		 		<td> {{user['INSURANCE'].toFixed(2)}} </td>
+  		 		<td> {{user['INSURANCEPROFIT'].toFixed(2)}} </td>
+  		 		<!---
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['newgoal']" ng-change="changeempnewgoal(user['userid'],user['newgoal'])"  type="number" maxlength="8"
+    width=5 value="{{user['newgoal']}}" ></input></td>
+  		 		
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['strategicgoal']" ng-change="changeempstrategicgoal(user['userid'],user['strategicgoal'])"  type="number" maxlength="8"
+    width=5 value="{{user['strategicgoal']}}" ></input></td>
+  		 		
+  		 		
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['profitgoal']" ng-change="changeempprofitgoal(user['userid'],user['profitgoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['profitgoal']}}" ></input></td>
+    
+    --->
+    
+    
+    			<!-- 
+    			
+    			<td> {{(user['PROFIT'].toFixed(2)/user['hours'].toFixed(2)).toFixed(2)}} </td>
+  		 		<td> {{(user['PROFIT'].toFixed(2)/user['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['profitperboxgoal']" ng-change="changeempprofitperboxgoal(user['userid'],user['profitperboxgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['profitperboxgoal']}}" ></input></td>
+  		 		<td> {{(user['ACCESSORY'].toFixed(2)/user['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 		 <td style="width:75px"><input style="width:75px" ng-model="user['accessoryperboxgoal']" ng-change="changeempaccessoryperboxgoal(user['userid'],user['accessoryperboxgoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['accessoryperboxgoal']}}" ></input></td>
+    
+    --->
+  		 		
+  		 		<!---<td style="width:75px"><input style="width:75px" ng-model="user['xlplangoal']" ng-change="changeempxlplangoal(user['userid'],user['xlplangoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['xlplangoal']}}" ></input></td>--->
+    			
+  		 		<!---<td style="width:75px"><input style="width:75px" ng-model="user['insurancegoal']" ng-change="changeempinsurancegoal(user['userid'],user['insurancegoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['insurancegoal']}}" ></input></td>
+   				 <td> {{(user['INSURANCE'].toFixed(2)/user['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>--->
+  		 	</tr>
+  		 	<!---<tr>
+  		 		<td style=";"><b></b><br/> PROFIT<br/> </td>
+  		 		<td><b>TRENDING</b><br/> NEW<br/> </td>
+  		 	</tr>
+  		 	<tr>
+  		 		<td> {{(trendingValue*user['PROFIT']).toFixed(2)}} </td>
+  		 		<td> {{(trendingValue*user['TOTALNEW']).toFixed(2)}} </td>
+  		 	</tr>
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> NEW LINES / BOXES </b> </td>
+  		 	</tr>
+  		 	
+		 	<tr>
+  		 		<td> <b>TOTAL</b><br/> NEW LINES</td>
+  		 		<td ng-if="user['newgoal']<=user['TOTALNEW'] " style="background-color:{{ColorLuminance('#BEE0B1',-( ((user['TOTALNEW']/user['newgoal'])/2 )-.2) )}};"><b>GOAL</b><br/> NEW LINES </td>
+  		 		<td ng-if="user['newgoal']>user['TOTALNEW'] " style="background-color:{{ColorLuminance('#E09F9F',-( ((user['newgoal']/user['TOTALNEW'])/30)-.2) )}};"><b>GOAL</b><br/> NEW LINES </td>
+  		 		<td ng-if="!user['newgoal']&&user['newgoal']!=0" style="background-color:{{ColorLuminance('#FFFFFF',0)}};"><b>GOAL</b><br/> NEW LINES </td>
+  		 		<td> STRATEGIC </td>
+  		 		<td><b>GOAL</b> <br/>STRATEGIC </td>
+  		 		<td> <b>TOTAL</b><br/>BOXES</td>
+  		 	</tr>
+		 	
+		 	<tr>
+  		 		<td> {{user['TOTALNEW'].toFixed(2)}} </td>
+  		 		
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['newgoal']" ng-change="changeempnewgoal(user['userid'],user['newgoal'])"  type="number" maxlength="8"
+    width=5 value="{{user['newgoal']}}" ></input></td>
+  		 		<td> {{user['STRATEGIC'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['strategicgoal']" ng-change="changeempstrategicgoal(user['userid'],user['strategicgoal'])"  type="number" maxlength="8"
+    width=5 value="{{user['strategicgoal']}}" ></input></td>
+  		 		<td> {{user['TOTALBOXES'].toFixed(2)}} </td>
+  		 	</tr>
+  		 	
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> PROFIT</b> </td>
+  		 	</tr>
+  		 	<tr>
+  		 		
+  		 		<td> PROFIT </td>
+  		 		<td><b>GOAL</b><br/> PROFIT</td>
+  		 		<td><b>PERHOUR</b><br/> PROFIT<br/> </td>
+  		 		
+  		 	</tr>
+  		 	<tr>
+  		 		<td> {{user['PROFIT'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['profitgoal']" ng-change="changeempprofitgoal(user['userid'],user['profitgoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['profitgoal']}}" ></input></td>
+    			<td> {{(user['PROFIT'].toFixed(2)/user['hours'].toFixed(2)).toFixed(2)}} </td>
+    			
+  		 	</tr>
+  		 	
+  		 		<tr style="font-size: 125%;">
+  		 		<td><b> PER BOX </b> </td>
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 	
+  		 		<td> PROFIT/BOX</td>
+  		 		<td><b>GOAL</b><br/> PROFIT/BOX</td>
+  		 		<td> ACCESSORY/BOX</td>
+  		 		<td><b>GOAL</b><br/> ACCESSORY/BOX</td>
+  		 		<td> ACCESSORY PROFIT </td>
+  		 		
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 		
+  		 		<td> {{(user['PROFIT'].toFixed(2)/user['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['profitperboxgoal']" ng-change="changeempprofitperboxgoal(user['userid'],user['profitperboxgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['profitperboxgoal']}}" ></input></td>
+  		 		<td> {{(user['ACCESSORY'].toFixed(2)/user['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 		 <td style="width:75px"><input style="width:75px" ng-model="user['accessoryperboxgoal']" ng-change="changeempaccessoryperboxgoal(user['userid'],user['accessoryperboxgoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['accessoryperboxgoal']}}" ></input></td>
+  		 		<td >{{user['ACCESSORY'].toFixed(2)}}</td>
+  		 		
+  		 	
+  		 	</tr>
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> XL PLANS </b> </td>
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 		<td> XLPLAN </td>
+  		 		<td><b>GOAL</b><br/> XLPLAN</td>
+  		 	</tr>
+  		 	<tr>
+  		 		<td> {{user['XLPLAN'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['xlplangoal']" ng-change="changeempxlplangoal(user['userid'],user['xlplangoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['xlplangoal']}}" ></input></td>
+  		 	</tr>
+  		 	
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> INSURANCE </b> </td>
+  		 	</tr>
+			  <tr>
+  		 		<td> INSURANCE </td>
+  		 		<td> INSURANCEPROFIT </td>
+  		 		<td><b>GOAL</b><br/> INSURANCE</td>
+  		 		<td> INSURANCE/BOX</td>
+  		 		
+  		 	  </tr>
+		 	
+		 	   <tr>
+  		 		<td> {{user['INSURANCE'].toFixed(2)}} </td>
+  		 		<td> {{user['INSURANCEPROFIT'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="user['insurancegoal']" ng-change="changeempinsurancegoal(user['userid'],user['insurancegoal'])"  type="text" maxlength="8"
+    width=5 value="{{user['insurancegoal']}}" ></input></td>
+    <td> {{(user['INSURANCE'].toFixed(2)/user['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 	   </tr>--->
+  		 	
+  		 	
+
+			
+  		 </table>
+  		 	
+	  	
+  	
+
+
+  	
+  	</p>
+  
+
+</body>
+</div>
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

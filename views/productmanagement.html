@@ -2,36 +2,70 @@
 
 <div>
  Search
- <input type="checkbox" ng-model="showHidden" value="false">show Hidden</input> 
   <input ng-model="typer">
   </input>
-    
-   
+    <button ng-click="setTyper('clvzap')">Apple</button>
+  <button ng-click="setTyper('clvzsa')">Samsung</button>
+  <button ng-click="setTyper('clvzvz')">Verizon</button>
+  <button ng-click="setTyper('clvzmo')">Motorola</button>
+  <button ng-click="setTyper('clvzht')">HTC</button>
+  <button ng-click="setTyper('clvzlg')">LG</button>
+  <button ng-click="setTyper('clvzky')">Kyocera</button>
+  <button ng-click="setTyper('clvznv')">Novatel</button>
+  
+    <div><table style="float:top;width:40%"></table>
+  <input type="checkbox" ng-model="showHidden" checked="true"> SHOW HIDDEN </input>
+    <p>
+  	
+  		<button ng-repeat="focus in storeArray" ng-if="focus.district == 'District Sanat'"  ng-click="setstoreSelection(focus.storeid)"  >
+  			<div>{{focus.storeid}}</div>
+  		</button>
+  		
+  				
+  		<div style="font-size:25">{{storeSelection}} {{ gettotalcost(storeSelection).toFixed(2) }}</div>
+  		<table>
+  		<tr>
+  		<td>Phone</td>
+  		<td>Order</td>
+  		<td>Cost</td>		
+  		<td>Desired Count</td>		
+  		<td>Current Stock</td>		
+  		</tr>
+  		<tr ng-repeat="abc in productList" ng-if="abc[storeSelection].order>0" ng-init="">
+  			
+  			<td><div>{{abc.name}}</div></td>
+  			<td><div>{{abc[storeSelection].order}}</div></td>
+  			<td><div>{{abc[storeSelection].ordercost}}</div></td>
+  			<td><div>{{abc[storeSelection].settings}}</div></td>
+  			<td><div>{{abc[storeSelection].inventory}}</div></td>
+  		</tr>
+  		
+  		
+  		</table>
+   </p>
   <table>
   	<tr >
   		<b>
   	<td><b>SKU </b></td>
-  	<td style="width:250px" ><b>Name </b></td>
-  	<td>Hidden</td>
-    <td><b>Desired<br> Count<br> HFX</b></td>	
-    <td><b>Desired<br> Count<br> EBW</b></td>
-  	<td><b>Desired<br> Count<br> FRA </b></td>
+  	<td style="width:150px" ><b>Name </b></td>
+  	<td><b>Hidden</b></td>
+  	<td><b>In<br>Stock<br></b></td>
+    <td><b>Desired<br>Count<br></b></td>	
+
   	<td style="width:75px"><b>Cost</b></td>
     </b>
     </tr>
-  <tr ng-model="typer" ng-repeat="x in productList | filter:typer|orderBy:'toString()'" ng-if="x['hidden']!=true||showHidden==true" >
-  	<td>{{ x['productlistid']}}</td>
-  	<td> {{ x['name']}}</td>
-    <td><input ng-model="x['hidden']" ng-change="changeHidden($index,x['hidden'])" type="checkbox" value="{{ x['hidden']}}">></td>
-    
-    <td><p style="font-size:x-large"> {{ x['stockFufillHalifax']}}</p><img ng-click="changeStock($index , 'HFX','1')" src="../img/plus.png" alt="Add" style="width:15px;height:15px;">
-    	<img ng-click="changeStock($index , 'HFX','0')" src="../img/minus.png" alt="Minus" style="width:15px;height:15px;"></td>
-    <td><p style="font-size:x-large">{{ x['stockFufillBridgewater']}}</p><img ng-click="changeStock($index , 'EBW','1')" src="../img/plus.png" alt="Add" style="width:15px;height:15px;">
-    	<img ng-click="changeStock($index , 'EBW','0')" src="../img/minus.png" alt="Minus" style="width:15px;height:15px;"></td>
-    <td><p style="font-size:x-large">{{ x['stockFufillFranklin']}}</p><img ng-click="changeStock($index , 'FRA','1')" src="../img/plus.png" alt="Add" style="width:15px;height:15px;">
-    	<img ng-click="changeStock($index , 'FRA','0')" src="../img/minus.png" alt="Minus" style="width:15px;height:15px;"></td>
-    <td style="width:75px"><input style="width:75px" ng-model="x['cost']" ng-change="changeCost($index,x['cost'])"  type="text" maxlength="8"
-    width=5  value="{{ x['cost']}}"></input></td>
+  <tr  ng-repeat="x in productList | filter:typer|orderBy:'toString()'" ng-if="x['hidden']!=true||showHidden==true" >
+  	<td>{{ x['RQSKU']}}</td>
+  	
+  	<td  ng-style=" { 'background-color': x['color']}"> {{ x['name']}}</td>
+    <td><input ng-model="x['hidden']" ng-change="changeHidden(x.RQSKU)" type="checkbox" value="{{ x['hidden']}}"></td>
+    <td> {{x[storeSelection].inventory}} </td>
+    <td> <input style="width:75px" ng-model="x[storeSelection].settings" ng-change="changeDesired(x.RQSKU, storeSelection , x[storeSelection].settings)"  type="text" maxlength="8"
+    width=5 value="{{x[storeSelection].settings}}" ></input> </td>
+   
+    <td style="width:75px"><input style="width:75px" ng-model="x.cost" ng-change="changeCost(x.RQSKU ,storeSelection, x.cost)"  type="text" maxlength="8"
+    width=5 value="{{x.cost}}" ></input></td>
     
    
     
@@ -40,7 +74,8 @@
    
 </table>
 </div>
-
+Add New Product
+<input type="text">
 
 <style>
 table, th , td  {

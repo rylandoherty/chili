@@ -2,17 +2,135 @@
 <cfcomponent>
 	<cfscript>
 	
-		public any function testGet(){
-			spititout = EntityLoad( "sales" );
-			writeDump(spititout);
+		remote any function testGet(){
+			var orderSetting = entityLoad("ordersettings");
+			for(var settings in orderSetting){
+			writedump(settings.getproductlist().getRQSKU());
+		
+			}
+			writedump(orderSetting[1].getstore().getstoreid());
+	    					
+	    					
 		}
 		
-		public any function organizeSales(rq4Data,finData){
-			 
-    		 ORMReload();
-    		 
-    		 
-    		var invoiceToSkip = [];
+		
+		public any function organizeSales(PDRData,PaymentData,PDRfile,Paymentfile){
+			  var uploadStuff = EntityNew('uploadrecord');
+				  uploadStuff.settype('sales');
+				  uploadStuff.settime(Now());
+				  uploadStuff.setfilename(PDRfile);
+				  entitySave(uploadStuff);
+			 private any function moneyReplace(number){
+			 							return Replace(Replace(Replace(Replace(number,"$",""), "(" , "-" ),")","" ),",","");
+			    				}
+    		 for(var sales in PaymentData){
+	    		if(sales['Invoice ##']!='Invoice ##'&&len(sales['Invoice ##'])){
+	    			
+		    			try { 
+		    				var theInvoice = entityLoad( "sales", sales['Invoice ##'] , true );
+		    				var storeQuery = entityLoad( "store", sales['location'] , true );
+		    				var employeeQuery = entityLoad( "user", sales['Primary Username'] , true );
+	    					if(!isDefined("storeQuery")){
+	    						var store = EntityNew('store');
+	    						store.setstoreid(sales['location']);
+	    						store.setregion(sales['Region']);
+	    						store.setdistrict(sales['District']);
+	    						EntitySave(store);
+	    						ormflush();
+	    						storeQuery = entityLoad( "store", sales['location'] , true );
+	    						}
+	    					if(!isDefined("employeeQuery")){
+	    						var user = EntityNew('user');
+	    						user.setuserid(sales['Primary Username']);
+	    						user.setpassword("Verizon1234");
+	    						user.setlevel(3);
+	    						
+	    						EntitySave(user);
+	    						ormflush();
+	    						storeQuery.adduser(user);
+	    						EntitySave(storeQuery);
+	    						employeeQuery = entityLoad( "user", sales['Primary Username'] , true );
+	    						}
+		    				if(!isDefined("theInvoice")){
+			    				
+			    				
+			    				newSale = EntityNew('sales');
+			    				
+			    				newSale.setsalesid(sales['Invoice ##']);
+							    newSale.setEMPLOYEE(sales['Primary Username']);
+							    newSale.setTYPE(sales['Type']); 
+							   
+							    newSale.setDATE(fixtime(sales['Created On'])); 
+							    newSale.setCOMM(moneyReplace(sales['Ven Reb Act']));
+							    newSale.setFINANCED(moneyReplace(sales['VZW DEVICE PAYMENT AMT.'])); 
+							    newSale.setCASH(moneyReplace(sales['Cash'])); 
+			    				newSale.setDATASCAPE(moneyReplace(sales['Datascape Cash only']));
+			    					
+								newSale.setCARDS(
+									moneyReplace(sales['MasterCard-Integrated'])+
+									moneyReplace(sales['Discover-Integrated'])+
+									moneyReplace(sales['AMEX-Integrated'])+
+									moneyReplace(sales['Visa-Integrated'])
+								);
+								newSale.setTRADEIN(moneyReplace(sales['Phone Trade In Store']));
+								EntitySave(newSale);
+								ormflush();
+								thisSale = EntityLoad('sales',sales['Invoice ##'],true);
+									for(var items in PDRData){
+										if(items['Invoice ##']!='Invoice ##'&&len(items['Invoice ##'])&&items['Invoice ##']==sales['Invoice ##']){
+											newProductSold = EntityNew('saledetails');
+											
+												thisSale.setCOMMENTS(items['Invoice Comments']);
+											
+											
+												thisSale.setCUSTOMER(items['Customer']);
+											
+											
+											newProductSold.setPRODUCTSKU(items['Product SKU']);
+											newProductSold.setCATEGORY(items['Category']);
+											newProductSold.setTRACKINGNUMBER(items['Tracking ##']);
+											newProductSold.setCONTRACTNUMBER(items['Contract ##']);
+											newProductSold.setPRODUCTNAME(items['Product Name']);
+											newProductSold.setREFUND(items['Refund']);
+											newProductSold.setQUANTITY(items['Qty']);
+											newProductSold.setTOTALCOST(moneyReplace(items['Total Cost']));
+											newProductSold.setSOLDFOR(moneyReplace(items['Sold For']));
+											newProductSold.setGROSSPROFIT(moneyReplace(items['Sold For'])-moneyReplace(items['Total Cost']));
+											EntitySave(newProductSold);
+											ormflush();
+											thisSale.addsaledetails(newProductSold);
+											entitySave(thisSale);
+											ormflush();
+											
+											}
+	   								}
+	   								thisSale = EntityLoad('sales',sales['Invoice ##'],true);
+	   								storeQuery.addsales(thisSale);
+		    						employeeQuery.addsales(thisSale);
+		    						entitySave(storeQuery);
+		    						entitySave(employeeQuery);
+		    						ormflush();
+	   								
+	   								
+	   								
+   					
+					}
+								
+		    			}catch(Exception ex) { 
+		    				WriteOutput("<p>#ex.message#</p>"); 
+						} 
+    			
+    				}
+    				
+    		}
+    				
+    	}
+    				
+    				
+    				/* ARTIFACT 
+    				
+    				
+    				
     		//CHECKING FOR BLANK ROWS in SALES BY INVOICE SHEET
     		for(var sales in finData){
     			if(sales['Sold By']!='Sold By'&&len(sales['Sold By'])){
@@ -78,7 +196,7 @@
     				//writeDump(theInvoice.getSaledetails());
     				/*if(arrayLen(theInvoice) && !len(memInvoiceNumber)){
     					writeOutput("Hey");
-    				}*/
+    				}
     				if(theInvoice.hasSaledetails()){
 	    				
 	    				 
@@ -184,60 +302,108 @@
 			return entityName;
 			
 		}
+		*/
 		
-			 
-			public any function setInventory(inventoryData){
-				
-				var oldStock = EntityLoad('inventory');
+		
+		
+			 //INVENTORY AND ORDERS
+			public any function setInventory(inventoryData,filename){
+				 var uploadStuff = EntityNew('uploadrecord');
+				  uploadStuff.settype('inventory');
+				  uploadStuff.settime(Now());
+				  uploadStuff.setfilename(filename);
+				  entitySave(uploadStuff);
+				 var oldStock = EntityLoad('inventory');
 				for(var i = 1;i<=arrayLen(oldStock);i++){
 					entityDelete(oldStock[i]);
-					
 				}
 				ormFlush();
+				ormreload();
+				
 					
 					
 								for(var item in inventoryData){
+									var found= false;
     			if(item['Product Name']!='Product Name'&&len(item['Product Name'])){
 	    			
 	    			try{ 
 	    				if(len(item['Tracking ##'])){
-	    					var productListQuery = entityLoad( "productlist", item['Product SKU'] , true );
-			    			if(!isDefined("productListQuery")){
-			    				var productList = EntityNew('productList');
-							    productList.setproductlistid(item['Product SKU']);
-							    productList.setname(item['Product Name']); 
-							    productList.sethidden(false);
-							    productList.setcategory(item['Category']); 
-							    productList.setstockFufillHalifax(0);
-							    productList.setstockFufillBridgewater(0); 
-							    productList.setstockFufillFranklin(0);
-							    productList.setcost(0);
-							    EntitySave(productList); 
-							    ormflush();
-			    				}
 	    					
-		    				var productInList = EntityLoad('productList', item['Product SKU'],true );
-		    				
-		    				var product = EntityNew('inventory');
-						    product.setinventoryid(item['Tracking ##']);
-						    product.setstore(item['Location']);
-							product.setname(item['Product Name']); 
-							product.setcost(item['Total Cost']); 
-						    product.setproductSKU(item['Product SKU']); 
-						    
-						    EntitySave(product); 
-						    
-						    productInList.addInventory(product);
-						    
-						    entitySave(productInList);
-						    ormflush(); 
-					    }
+	    					var storeQuery = entityLoad( "store", item['Location'] , true );
+	    					var productList = entityLoad("productlist", item['Product SKU'] , true );
+	    					var orderSetting = entityLoad("ordersettings");
+	    					for(var settings in orderSetting){
+	    						var stored = settings;
+	    						var prod = settings.getproductlist();
+	    						
+	    						if(settings.getstorename()==item['Location']&&settings.getproductsku()==item['Product SKU']){
+	    							found = true;
+	    						}
+	    					}
+	    					//var selt = ORMExecuteQuery("from Sales where store.storeid=:country", {country='E Bridgewater'});
+	    					
+	    					if(!isDefined("storeQuery")){
+	    						storeQuery = EntityNew('store');
+	    						storeQuery.setstoreid(item['Location']);
+	    						EntitySave(storeQuery);
+	    						ormflush();
+	    					}
+	    					if(!isDefined("productList")){
+	    						productList = EntityNew('productlist');
+							   		productList.setRQSKU(item['Product SKU']);
+							   		productList.setname(item['Product Name']); 
+							    	productList.sethidden(false);
+							    	productList.setcategory(item['Category']); 
+							    	
+								   productList.setcost(item['Total Cost']);
+								   
+							    	EntitySave(productList); 
+							    	ormflush();
+	    					}
+	    					if(found==false){
+	    							orderSetting = EntityNew('ordersettings');
+							   		orderSetting.setdesiredcount(0);
+							   		orderSetting.setstorename(item['Location']);
+							   		orderSetting.setproductsku(item['Product SKU']);
+							   		EntitySave(orderSetting); 
+							    	
+							    	storeQuery.addordersettings(orderSetting);
+							    	productList.addordersettings(orderSetting);
+							    	 
+							    	entitySave(storeQuery);
+							    	entitySave(productList);
+							    	ormflush();
+							    	
+							    	
+	    					}
+	    					found=false;
+	    							var product = EntityNew('inventory');
+								    product.setinventoryid(item['Tracking ##']);
+								    product.setname(item['Product Name']); 
+									product.setcost(item['Total Cost']); 
+									product.setstorename(item['Location']);
+									product.setproductsku(item['Product SKU']);
+								    
+								    
+								    EntitySave(product); 
+								    
+								    
+								    storeQuery.addInventory(product);
+								    entitySave(storeQuery);
+								    
+								    productList.addInventory(product);
+								    entitySave(productList);
+								    ormflush(); 
+								}    
+								    
+	    					
+					    
 					    
 					    
 					} catch(Exception ex) { 
 	    				WriteOutput("<p>#ex.message#</p>"); 
 						} 
-	    			
+	    			}
 	    			
 	    			}
     			
@@ -246,7 +412,6 @@
 				
 			} 
 			
-			}
 			
 			
 			
@@ -254,6 +419,69 @@
 			
 			
 			
+			/*
+	    					else{
+	    						 productList = entityLoad("productlist");
+	    						if(!isDefined("productList")){
+	    							var productSettings = EntityNew('productlist');
+							   		productSettings.setRQSKU(item['Product SKU']);
+							   		productSettings.setname(item['Product Name']); 
+							    	productSettings.sethidden(false);
+							    	productSettings.setcategory(item['Category']); 
+							    	productSettings.setstockFufill(0);
+								    productSettings.setcost(0);
+								    productSettings.setstore(item['Location']);
+							    	EntitySave(productSettings); 
+							    	ormflush();
+		    						storeQuery.addproductlist(productSettings);
+		    						EntitySave(storeQuery);
+		    						ormflush();
+	    						}
+	    						else{
+	    							
+		    						if(found==false){
+		    							var productSettings = EntityNew('productlist');
+							   			productSettings.setRQSKU(item['Product SKU']);
+							   			productSettings.setname(item['Product Name']); 
+							    		productSettings.sethidden(false);
+							    		 
+							    		productSettings.setstockFufill(0);
+								    	productSettings.setcost(0);
+								    	
+								    	EntitySave(productSettings); 
+								    	ormflush();
+			    						storeQuery.addproductlist(productSettings);
+			    						EntitySave(storeQuery);
+			    						ormflush();
+		    						}
+	    						}	
+	    						}
+	    						
+	    					storeQuery = entityLoad( "store", item['Location'] , true );
+		    				
+		    				thisProductSetting = entityLoad('productlist');
+		    				for(var phones in thisProductSetting){
+		    					
+    							if(phones.GETRQSKU()==item['Product SKU']&&phones.GETSTORE()==item['Location']){
+    								
+    								
+    								var product = EntityNew('inventory');
+								    product.setinventoryid(item['Tracking ##']);
+								    
+									product.setname(item['Product Name']); 
+									product.setcost(item['Total Cost']); 
+								    product.setproductSKU(item['Product SKU']); 
+								    product.setuploadTime(fixtime(Now())); 
+								    EntitySave(product); 
+								    ormflush();
+								    thisProductSetting[phones].addInventory(product);
+								    entitySave(thisProductSetting);
+								    ormflush(); 
+								    storeQuery.addproductlist(thisProductSetting);
+								    entitySave(storeQuery);
+								    ormflush(); 
+	    						}}
+    						} */
 			
 			
 			

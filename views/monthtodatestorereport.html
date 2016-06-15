@@ -1,0 +1,100 @@
+
+
+<div>
+  
+  
+  <div " style="position: fixed;right: 100">
+  	
+  	<div ng-repeat="invoice in showInvoice" >{{invoice['PRODUCTNAME']}}
+  	{{invoice['SOLDFOR']}}-{{invoice['TOTALCOST']}}={{invoice['GROSSPROFIT']}}
+  	
+  	
+  	
+  	
+  	</div>
+  	
+  </div>
+
+ <body >
+ 	
+ 
+  	<p>
+  		
+  		<input type="button"  ng-click="MonthSelect='3'">Apr</input>
+  		<input type="button"  ng-click="MonthSelect='4'">May</input>
+  	<div ng-repeat="store in salesx" ng-if="store['district']=='District Sanat'" >
+  	{{store['storeid']}}
+  		<input type="checkbox" ng-model="store[checked]" >
+  	</div>
+  	
+  	<div  ng-repeat="store in salesx" ng-if="store[checked]"   >
+  	{{store['district']}}
+  	
+  
+
+  
+  		 <table>
+  		 	<tr>
+  		 		<td> Date </td>
+  		 		<td> Total Cash </td>
+  		 		<td> Cash  Sales</td>
+  		 		<td> Datascape </td>
+  		 		<td> Cards </td>
+  		 		<td> Financed </td>
+  		 		
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 		<td></td>
+  		 		<td> {{store.dates[MonthSelect]['TOTALCASH'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['CASH'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['DATASCAPE'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['CARDS'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['FINANCED'].toFixed(2)}} </td>
+  		 		
+  		 	</tr>
+  		 	<tr>
+  		 		<td> Date </td>
+  		 		<td> Total Cash </td>
+  		 		<td> Cash  Sales</td>
+  		 		<td> Datascape </td>
+  		 		<td> Cards </td>
+  		 		<td> Financed </td>
+  		 		
+  		 	</tr>
+  		 
+	  	<tr ng-repeat="day in store.dates[MonthSelect]"  >
+	    
+	  	<td>{{day['Name']}}</td>
+	  	
+	  	<td>{{day['TOTALCASH'].toFixed(2)}}</td>
+	  	<td>{{day['CASH'].toFixed(2)}}</td>
+	  	<td>{{day['DATASCAPE'].toFixed(2)}}</td>
+	  	<td>{{day['CARDS'].toFixed(2)}}</td>
+	  	<td>{{day['FINANCED'].toFixed(2)}}</td>
+	  	
+	  	<td ng-click="invoiceSwitch(day)"><div ng-if="day['SHOWINVOICES']" ng-repeat="invs in day['INVOICES']" ng-click="invoiceDetailShow(invs.saledetails)">{{invs.salesid}}</div></td>
+	  	</div>
+	  	
+  	</table>
+
+  </div> 
+  	
+  	</p>
+  
+
+</body>
+</div>
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

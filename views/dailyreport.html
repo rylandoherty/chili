@@ -1,0 +1,195 @@
+
+
+<div>
+  
+  
+  <div " style="position: fixed;right: 100">
+  	
+  	<div ng-repeat="invoice in showInvoice" >{{invoice['PRODUCTNAME']}}
+  	{{invoice['SOLDFOR']}}-{{invoice['TOTALCOST']}}={{invoice['GROSSPROFIT']}}
+  	
+  	
+  	
+  	
+  	</div>
+  	
+  </div>
+
+ <body >
+ 
+  	<p>
+  		
+ 	<div>
+ 		
+ 		
+ 	</div>
+  		<input type="button"  ng-click="MonthSelect='4'">May</input>
+  		<input type="button"  ng-click="MonthSelect='5'">June</input>
+  	<div ng-repeat="store in salesx" ng-if="store['district']=='District Sanat'" >
+  	{{store['storeid']}}
+  		<input type="checkbox" ng-model="store[checked]" >
+  	</div>
+  	
+  	<div  ng-repeat="store in salesx" ng-if="store[checked]">
+  	{{store['district']}}
+  	
+  
+		 <table>
+		 	
+		 	<tr style="font-size: 125%;">
+  		 		<td><b> NEW LINES / BOXES </b> </td>
+  		 	</tr>
+		 	<tr>
+  		 		<td> <b>TOTAL</b><br/> NEW LINES</td>
+  		 		<td><b>GOAL</b><br/> NEW LINES </td>
+  		 		<td> STRATEGIC </td>
+  		 		<td><b>GOAL</b> <br/>STRATEGIC </td>
+  		 		<td> <b>TOTAL</b><br/>BOXES</td>
+  		 	</tr>
+		 	
+		 	<tr>
+  		 		<td> {{store['TOTALNEW'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="store['newgoal']" ng-change="changenewgoal(store['storeid'],store['newgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['newgoal']}}" ></input></td>
+  		 		<td> {{store['STRATEGIC'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="store['strategicgoal']" ng-change="changestrategicgoal(store['storeid'],store['strategicgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['strategicgoal']}}" ></input></td>
+  		 		<td> {{store['TOTALBOXES'].toFixed(2)}} </td>
+  		 	</tr>
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> PROFIT</b> </td>
+  		 	</tr>
+  		 	<tr>
+  		 		
+  		 		<td> PROFIT </td>
+  		 		<td><b>GOAL</b><br/> PROFIT</td>
+  		 		
+  		 	</tr>
+  		 	<tr>
+  		 		<td> {{store['PROFIT'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="store['profitgoal']" ng-change="changeprofitgoal(store['storeid'],store['profitgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['profitgoal']}}" ></input></td>
+  		 	</tr>
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> PER BOX </b> </td>
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 	
+  		 		<td> PROFIT/BOX</td>
+  		 		<td><b>GOAL</b><br/> PROFIT/BOX</td>
+  		 		<td> ACCESSORY/BOX</td>
+  		 		<td><b>GOAL</b><br/> ACCESSORY/BOX</td>
+  		 		<td> ACCESSORY PROFIT </td>
+  		 		
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 		
+  		 		<td> {{(store['PROFIT'].toFixed(2)/store['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="store['profitperboxgoal']" ng-change="changeprofitperboxgoal(store['storeid'],store['profitperboxgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['profitperboxgoal']}}" ></input></td>
+  		 		<td> {{(store['ACCESSORY'].toFixed(2)/store['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 		 <td style="width:75px"><input style="width:75px" ng-model="store['accessoryperboxgoal']" ng-change="changeaccessoryperboxgoal(store['storeid'],store['accessoryperboxgoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['accessoryperboxgoal']}}" ></input></td>
+  		 		<td >{{store['ACCESSORY'].toFixed(2)}}</td>
+  		 		
+  		 	
+  		 	</tr>
+  		 	<tr style="font-size: 125%;">
+  		 		<td><b> XL PLANS </b> </td>
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 		<td> XLPLAN </td>
+  		 		<td><b>GOAL</b><br/> XLPLAN</td>
+  		 	</tr>
+  		 	<tr>
+  		 		<td> {{store['XLPLAN'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="store['xlplangoal']" ng-change="changexlplangoal(store['storeid'],store['xlplangoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['xlplangoal']}}" ></input></td>
+  		 	</tr>
+  		 	
+			 <tr style="font-size: 125%;">
+  		 		<td><b> INSURANCE </b> </td>
+  		 	</tr>
+			  <tr>
+  		 		<td> INSURANCE </td>
+  		 		<td> INSURANCEPROFIT </td>
+  		 		<td><b>GOAL</b><br/> INSURANCE</td>
+  		 		<td> INSURANCE/BOX</td>
+  		 		
+  		 	  </tr>
+		 	
+		 	   <tr>
+  		 		<td> {{store['INSURANCE'].toFixed(2)}} </td>
+  		 		<td> {{store['INSURANCEPROFIT'].toFixed(2)}} </td>
+  		 		<td style="width:75px"><input style="width:75px" ng-model="store['insurancegoal']" ng-change="changeinsurancegoal(store['storeid'],store['insurancegoal'])"  type="text" maxlength="8"
+    width=5 value="{{store['insurancegoal']}}" ></input></td>
+    <td> {{(store['INSURANCE'].toFixed(2)/store['TOTALBOXES'].toFixed(2)).toFixed(2)}} </td>
+  		 	   </tr>
+  		 <table>
+  		 	<tr>
+  		 		<td> Date </td>
+  		 		<td> Total Cash </td>
+  		 		<td> Cash  Sales</td>
+  		 		<td> Datascape </td>
+  		 		<td> Cards </td>
+  		 		<td> Financed </td>
+  		 		
+  		 	</tr>
+  		 	
+  		 	<tr>
+  		 		<td></td>
+  		 		<td> {{store.dates[MonthSelect]['TOTALCASH'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['CASH'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['DATASCAPE'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['CARDS'].toFixed(2)}} </td>
+  		 		<td> {{store.dates[MonthSelect]['FINANCED'].toFixed(2)}} </td>
+  		 		
+  		 	</tr>
+  		 	<tr>
+  		 		<td> Date </td>
+  		 		<td> Total Cash </td>
+  		 		<td> Cash  Sales</td>
+  		 		<td> Datascape Cash </td>
+  		 		<td> Cards </td>
+  		 		<td> Financed </td>
+  		 		
+  		 	</tr>
+  		 
+	  	<tr ng-repeat="day in store.dates[MonthSelect]"  >
+	    
+	  	<td>{{day['Name']}}</td>
+	  	
+	  	<td>{{day['TOTALCASH'].toFixed(2)}}</td>
+	  	<td>{{day['CASH'].toFixed(2)}}</td>
+	  	<td>{{day['DATASCAPE'].toFixed(2)}}</td>
+	  	<td>{{day['CARDS'].toFixed(2)}}</td>
+	  	<td>{{day['FINANCED'].toFixed(2)}}</td>
+	  	
+	  	<td ng-click="invoiceSwitch(day)"><div ng-if="day['SHOWINVOICES']" ng-repeat="invs in day['INVOICES']" ng-click="invoiceDetailShow(invs.saledetails)">{{invs.salesid}}</div></td>
+	  	</div>
+	  	
+  	</table>
+
+  </div> 
+  	
+  	</p>
+  
+
+</body>
+</div>
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

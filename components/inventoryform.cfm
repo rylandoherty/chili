@@ -79,14 +79,14 @@
 		 logic = createObject("component", "logic");
 		
 		//numberStruct = logic.testGet();
-		numberStruct =  logic.setInventory(inventoryData);
+		numberStruct =  logic.setInventory(inventoryData , inventoryFile.serverFile);
 		
 		
 		//myReturn = TheObject.findingTargetColumns(data);
 		
 	</cfscript>
 	<script type="text/javascript" >
-		//window.location.href = "/";
+		window.location.href = "/";
 	</script>
 	
 

@@ -22,7 +22,7 @@ $scope.pass ="";
     $scope.prop2 = true;
     $scope.both = sharedProperties.setProperty($scope.prop2);
 }
- $scope.thin = Ctrl2($scope, sharedProperties);
+ $scope.thing = Ctrl2($scope, sharedProperties);
  
 function Ctrl2($scope, sharedProperties) {
     
@@ -38,17 +38,47 @@ function Ctrl2($scope, sharedProperties) {
 	//console.log(userid.value);
 	 var pass = $window.document.getElementById('psw');
 	//console.log(pass.value);
-	 this.loggedIn = false;
-	$scope.userStuff = f.validateAndReturnUser(userid.value,pass.value);
+	  $scope.$parent['loggedIn']= false;
+	$window.userStuff = f.validateAndReturnUser(userid.value,pass.value);
+	
+	if($window.userStuff=='wrong pass'){
+	$window.message = "wrong pass";	
+	}
+	else{
+		
+	$window.userTag =userid.value;
+	$window.storeStuff = e.loadStoreStuff();
+	$window.uploadTimes = $window.storeStuff[3];
+	$window.commList = $window.storeStuff[4];
+	$window.theProductList = $window.storeStuff[1];
+	$window.salesQuery = $window.storeStuff[0];
+	$window.userQuery = $window.storeStuff[2];
+	console.log($window.storeStuff);
+	}
+	
+	
+
+ 			
+ 			
+ 		
+ 		
+ 		
+ 		
+	//$window.theProductList = e.loadProductList();
+	//$window.salesQuery = e.loadStoresSalesItems();
+	
+	
+	
+	
 	if($scope.userStuff == 0){
 		
 		$scope.userStuff = "not found";
 	}
 	else{
-		 
 		 Ctrl1($scope,sharedProperties);
-		 $scope.thin = Ctrl2($scope, sharedProperties);
-		 this.loggedIn = true;
+		 //$scope.thin = Ctrl2($scope, sharedProperties);
+		   $scope.$parent['level'] = $window.userStuff['level'];
+		 $scope.$parent['level'] = $window.userStuff['level'];
 		 
 	}
 	

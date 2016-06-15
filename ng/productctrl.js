@@ -11,86 +11,163 @@ ProductCtrl.$inject = ['$routeParams','$scope','$window'];
 // Now create our controller function with all necessary logic
 
 function ProductCtrl($routeParams, $scope, $window) {
-	$scope.productList =  $window.theProductList;
+		$scope.getColor = function (name){
+		//var item = $scope.productList[product];
+		var colorArray = [['ROSE GOLD','pink'],['GOLD','#ffc61a'],['GRAY','#999999'],['SILVER','#bfbfbf'],['BLACK','#999999'],['WHITE','#ffffcc'],['MOTXT15','#79d279'],['VERIZON','#E32636']];
+		
+		console.log(name);
+		if(!name){
+			
+		}
+		else{
+			for(colors in colorArray){
+			if(name.toUpperCase().indexOf(colorArray[colors][0])>-1){
+				
+			return colorArray[colors][1];
+			}
+		}
+			
+		return "white";
+		}
+	}
+		
+		$scope.productList =  $window.theProductList;
+		$scope.storeArray =   $window.salesQuery;
+		$scope.totalcost = 0;
+		
 	
-	$scope.changeCost = function (product,cost){
-		var item = $scope.productList[product];
-		productListProxy.setCost(item['productlistid'],cost);
+	for(var stores in $scope.storeArray){
+ 					$scope.productList[$scope.storeArray[stores].storeid]={};
+ 					$scope.productList[$scope.storeArray[stores].storeid].ordertotalcost = 0;
+				}
+	
+ 	for(var products in $scope.productList){
+	$scope.productList[products].color = $scope.getColor($scope.productList[products]['name']);
+ 				for(var stores in $scope.storeArray){
+ 					
+ 					$scope.productList[products][$scope.storeArray[stores].storeid]={};
+ 				$scope.productList[products][$scope.storeArray[stores].storeid].inventory = 0;
+ 					$scope.productList[products][$scope.storeArray[stores].storeid].ordercost = 0;
+				}
+				for(var stock in $scope.productList[products].inventory){
+ 				
+ 				if(angular.isDefined($scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory)){
+ 				$scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory += 1;
+ 				}
+ 				else{
+ 				$scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory = 1;
+ 				}
+ 				
+ 			}
+				
+ 			for(var storex in $scope.productList[products].settings){
+ 				
+ 					$scope.productList[products][$scope.productList[products].settings[storex].storename].settings =
+ 					 $scope.productList[products].settings[storex].desiredcount;
+ 				
+ 				
+ 			}
+ 			
+ 			for(var stores in $scope.storeArray){
+ 				var storename = $scope.storeArray[stores].storeid;
+ 				if($scope.productList[products][storename].inventory<$scope.productList[products][storename].settings){
+ 					var coster = $scope.productList[products].cost +" ";
+ 					if(coster.substring(0,1)=='$'){
+ 					$scope.productList[products]['cost'] = coster.substring(1,coster.length);	
+ 					
+ 					}
+ 					
+ 					$scope.productList[products][storename].order = $scope.productList[products][storename].settings-$scope.productList[products][storename].inventory;
+ 					$scope.productList[products][storename].ordercost =  $scope.productList[products][storename].order * $scope.productList[products]['cost'];
+ 					$scope.productList[storename].ordertotalcost += $scope.productList[products][storename].ordercost;
+ 					
+ 				}
+ 				else{
+ 					$scope.productList[products][storename].order = 0;
+ 					
+ 				}
+ 				
+ 				}
+				
+		}
+				
+				
+
+	
+
+	$scope.storeSelection = "";
+	
+	$scope.count=0;
+	
+	$scope.gettotalcost = function (store){
+		
+		$scope.productList[store]['ordertotalcost'] = 0;
+		
+		for(var products in $scope.productList){
+ 				var storename = store;
+ 				if($scope.productList[products][storename].inventory<$scope.productList[products][storename].settings){
+ 					var coster = $scope.productList[products].cost +" ";
+ 					if(coster.substring(0,1)=='$'){
+ 					$scope.productList[products]['cost'] = coster.substring(1,coster.length);	
+ 					}
+ 					
+ 					$scope.productList[products][storename]['order'] = $scope.productList[products][storename].settings-$scope.productList[products][storename].inventory;
+ 					$scope.productList[products][storename]['ordercost'] =  $scope.productList[products][storename]['order'] * $scope.productList[products]['cost'];
+ 					$scope.productList[storename]['ordertotalcost'] += $scope.productList[products][storename]['ordercost'];
+ 				}
+ 				else{
+ 					$scope.productList[products][storename]['order'] = 0;
+ 					
+ 				}
+ 				
+ 				}
+ 				
+ 				return $scope.productList[storename]['ordertotalcost'];
+ 				}
+	
+	
+	$scope.setstoreSelection = function (store){
+		$scope.storeSelection = store;
+		
+	}
+		$scope.setTyper = function (text){
+		
+		$scope.typer = text;
+		
+	}
+	$scope.changeCost = function (product,store,cost){
+		
+		productListProxy.setCost(product,cost);
+		$scope.gettotalcost(store);
 		
 	}
 	$scope.changeName = function (product,name){
 		var item = $scope.productList[product];
-		productListProxy.setName(item['productlistid'],name);
+		productListProxy.setName(item['RQSKU'],name);
 		
 	}
 	$scope.changeHidden = function (product){
-		var item = $scope.productList[product];
-		productListProxy.setHidden(item['productlistid']);
+		//var item = $scope.productList[product];
+		productListProxy.setHidden(product);
 		
 	}
 	
-	$scope.changeStock = function ( product,location,addOrRemove ) {
-    this.listOfStores = ['HFX','EBW','FRA'];
-    var item = $scope.productList[product];
-    switch (location) {
-	    case this.listOfStores[0]:
-	        if(addOrRemove==0&&item['stockFufillHalifax']!=0){
-	        	item['stockFufillHalifax']=
-  				item['stockFufillHalifax']-1;
-  				productListProxy.setStock(item['productlistid'],"stockFufillHalifax","-1");
-	        }
-	        else if(addOrRemove==1){
-	        	item['stockFufillHalifax']=
-  				item['stockFufillHalifax']+1;
-  				productListProxy.setStock(item['productlistid'],"stockFufillHalifax","1");
-	        }
-	        break;
-	    case this.listOfStores[1]:
-	        if(addOrRemove==0&&item['stockFufillBridgewater']!=0){
-	        	item['stockFufillBridgewater']=
-  				item['stockFufillBridgewater']-1;
-  				productListProxy.setStock(item['productlistid'],"stockFufillBridgewater","-1");
-	        }
-	        else if(addOrRemove==1){
-	        	item['stockFufillBridgewater']=
-  				item['stockFufillBridgewater']+1;
-  				productListProxy.setStock(item['productlistid'],"stockFufillBridgewater","1");
-	        }
-	        break;
-	    case this.listOfStores[2]:
-	        if(addOrRemove==0&&item['stockFufillFranklin']!=0){
-	        	item['stockFufillFranklin']=
-  				item['stockFufillFranklin']-1;
-  				productListProxy.setStock(item['productlistid'],"stockFufillFranklin","-1");
-	        }
-	        else if(addOrRemove==1){
-	        	item['stockFufillFranklin']=
-  				item['stockFufillFranklin']+1;
-  				productListProxy.setStock(item['productlistid'],"stockFufillFranklin","1");
-	        }
-	        break;
-	  	 }
-  
-}
+	$scope.changeDesired = function (product,store,countx){
+		console.log(product,store,countx);
+		$scope.gettotalcost(store);
+		productListProxy.setStock(product,store,countx);
+		
+	}
  
  
   
   this.name = "ProductManagement";
   this.params = $routeParams;
   
-  
-  for(var product in $scope.productList){
-  	var thisProduct = $scope.productList[product];
-  	
-  	//this.RQSKU = thisProduct['productlistid'];
-  	//this.name = thisProduct['name'];
-  	//this.listOfStores = [thisProduct['stockFufillHalifax'],thisProduct['stockFufillBridgewater'],thisProduct['stockFufillFranklin']];
-  	
-  }
   }
   function changeStock(product,location){
   	console.log("HEY");
-  	productManagement.productList[product['productlistid']]['stockFufillHalifax']=productManagement.productList[product['productlistid']]['stockFufillHalifax']+1;
+  	productManagement.productList[product['RQSKU']]['stockFufillHalifax']=productManagement.productList[product['RQSKU']]['stockFufillHalifax']+1;
   	
   }
  

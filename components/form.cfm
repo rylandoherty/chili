@@ -80,14 +80,14 @@
 		 logic = createObject("component", "logic");
 		
 		//numberStruct = logic.testGet();
-		numberStruct =  logic.organizeSales(rq4Data,finData);
+		numberStruct =  logic.organizeSales(rq4Data,finData, rq4file.serverFile, finfile.serverFile);
 		
 		
 		//myReturn = TheObject.findingTargetColumns(data);
 		
 	</cfscript>
 	<script type="text/javascript" >
-		window.location.href = "/Login";
+		window.location.href = "/";
 	</script>
 	
 

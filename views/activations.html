@@ -1,0 +1,79 @@
+
+
+<div>
+  
+  
+  
+  	
+
+ <body >
+ 	
+ <input type="checkbox" ng-model="showChecked" > SHOW CHECKED </input>
+  	<p>
+  		{{showChecked}}
+  		<input type="button"  ng-click="MonthSelect='3'">Apr</input>
+  		<input type="button"  ng-click="MonthSelect='4'">May</input>
+  	<div ng-repeat="store in salesx" ng-if="store['district']=='District Sanat'&&(userStuff.level<2||userStuff.location==store.storeid)" >
+  	{{store['storeid']}}
+  		<input type="checkbox" ng-model="store[checked]" >
+  	</div>
+  	
+  	<div  ng-repeat="store in salesx" ng-if="store[checked]"   >
+  	
+  	
+  
+		 <table>
+		 <tr ng-repeat="acts in store['Activations']" ng-if="(acts['ACTS'].length>0)&&((!acts['CHECKEDBYMANAGER']&&!showChecked)||(showChecked && acts['CHECKEDBYMANAGER']))">
+		 	<td>{{acts['salesid']}}<br/>
+		 		{{acts['EMPLOYEE']}}<br/>
+		 		VZWFIN::{{acts['FINANCED']}}<br/>
+		 		{{acts['CUSTOMER']}}<br/>
+		 		<input style="width:75px" ng-model="acts['LASTFOUR']" placeholder="LAST4" ng-change="changelastfour(acts['salesid'],acts['LASTFOUR'])"  type="number" maxlength="4"
+    width=5 value="{{acts['LASTFOUR']}}" ></input>
+    <input style="width:75px" placeholder="PASS" ng-model="acts['PASSWORD']" ng-change="changepassword(acts['salesid'],acts['PASSWORD'])"  type="text" maxlength="5"
+    width=5 value="{{acts['PASSWORD']}}" ></input>
+    
+    <div ng-if="userStuff.level<=2"> Checked<input  ng-model="acts['CHECKEDBYMANAGER']" checked="acts['CHECKEDBYMANAGER']" ng-change="changecheckedbymanager(acts['salesid'],acts['CHECKEDBYMANAGER'])" type="checkbox" value="{{ acts['CHECKEDBYMANAGER']}}">
+    </input></div>
+		 	</td>
+		 	<td ng-repeat="contract in acts['ACTS']">
+		 		
+		 		<div >
+		 			{{contract.TRACKINGNUMBER}}
+		 		</div>
+		 		<div >
+		 			{{contract.PRODUCTNAME}}
+		 		</div>
+		 		<input style="width:75px" placeholder="CONTRACT#" ng-model="contract.CONTRACTNUMBER" ng-change="changecontractnumber(contract.id, contract.CONTRACTNUMBER )"  type="text" maxlength="9"
+    width=8 value="{{contract.CONTRACTNUMBER}}" ></input>
+		 		<div >
+		 			{{contract.GROSSPROFIT}}
+		 		</div>
+		 		<div >
+		 			REFUND: {{contract.REFUND}}
+		 		</div>
+		 </td>	
+		 </td>
+		 </tr>
+  	</table>
+
+  </div> 
+  	
+  	</p>
+  
+
+</body>
+</div>
+<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

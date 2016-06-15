@@ -13,3 +13,29 @@
 
 MAKES BUTTON POP UP WHEN YOU STICK IN INDEX.
 BREAKS PROGRAM THOUGH.
+
+
+
+
+
+
+
+   <cfif isdefined("form.fileData")> 
+      <cfscript>  
+      	writeOutput("{{x[0]}}");
+            hello = FileUpload("C:\ColdFusion10\cfusion\wwwroot\chilipos\img");
+            //f = new proxy.setProductList();
+            //f.setIcon('{{productList[$index]}}', hello.CLIENTFILE);
+	
+           // proxy.SetProductList.setIcon(item['productlistid'],"/img/"&hello.CLIENTFILE);
+           // writeDump(proxy);
+      </cfscript> 
+      <cfset varx =#hello.CLIENTFILE#> 
+<cfelse> 
+      <cfform name="myUpload" enctype="multipart/form-data"> 
+            <cfinput type="file" name="fileData"><br> 
+            	
+            <cfinput ng-click="changeIcon('','hey')" type="submit" name="submit"> 
+      </cfform> 
+</cfif>
+

@@ -4,6 +4,10 @@
     <cfproperty name="sales" fieldtype="one-to-many" cfc="sales" fkcolumn="storeid">
     <cfproperty name="inventory" fieldtype="one-to-many" cfc="inventory" fkcolumn="storeid">
     <cfproperty name="ordersettings" fieldtype="one-to-many" cfc="ordersettings" fkcolumn="storeid">
+    <cfproperty name="rma" fieldtype="one-to-many" cfc="rma" fkcolumn="storeid" update="true" >
+    <cfproperty name="transfers" fieldtype="one-to-many" cfc="transfers" fkcolumn="storeid" update="true" >
+     <cfproperty name="received" fieldtype="one-to-many" cfc="received" fkcolumn="storeid" update="true" >
+     <cfproperty name="receivedInvoice" fieldtype="one-to-many" cfc="receivedInvoice" fkcolumn="storeid" update="true" >
     <cfproperty name="region">
     <cfproperty name="district">
     <cfproperty name="profitgoal">

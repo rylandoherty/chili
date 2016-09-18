@@ -135,7 +135,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	}
 	
 	$scope.userStuff =  $window.userStuff;
-		console.log($scope.userStuff);
+		//console.log($scope.userStuff);
 		scope.salesList =  $window.salesQuery;
 	
 		
@@ -228,7 +228,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
      		scope.salesList[stores]['dates'][lastoflastmonth.getMonth()][date] = {Name:stringdate,TOTALCASH:0,CASH:0,DATASCAPE:0,FINANCED:0,CARDS:0,TRADEIN:0,INVOICES:{},SHOWINVOICES:0,SHOWTHISINVOICE:0};
      		
      		}
-    
+   // console.log(scope.salesList);
      	
 	 for(var sales in scope.salesList[stores]['sales']){
 	 	var thisSale = scope.salesList[stores]['sales'][sales];
@@ -245,7 +245,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 			
 	 		}
 	 		if(toptwo==true){
-	 			console.log('true');
+	 			//console.log('true');
 	 		
 	 	
 	 	var hasActivations = false;
@@ -564,7 +564,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 }		
 	$scope.users = scope.userList;
 	 $scope.salesx = scope.salesList;
-	console.log($scope.users);
+	//console.log($scope.users);
      	/*
      	this[dummy] = {};
      	

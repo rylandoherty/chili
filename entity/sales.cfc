@@ -4,7 +4,7 @@
     <cfproperty name="DATE">
     <cfproperty name="TYPE">
     <cfproperty name="store" fieldtype="many-to-one" cfc="store">
-    <cfproperty name="user" fieldtype="many-to-one" cfc="user" > 
+    <cfproperty name="user" fieldtype="many-to-one" cfc="user"> 
     <cfproperty name="FINANCED"> 
     <cfproperty name="CASH"> 
     <cfproperty name="DATASCAPE"> 

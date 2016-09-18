@@ -15,7 +15,19 @@
 		
 		
 		public any function saveComm(newFile,upgFile,insFile,cbFile,deactFile){
-			 private any function changeNEWdate(date){
+			
+			private any function changeMOBIL(number){
+				
+			number = replace(number,"-","","all");
+			number = replace(number," ","","all");
+			
+			number = left(number,10);
+			 
+			return number;
+			}
+			
+			
+			private any function changeNEWdate(date){
 			 					
 			var month = ListGetAt(date,1,"/");
 			var day = ListGetAt(date,2,"/");
@@ -58,13 +70,19 @@
 			 	
 			    					return Replace(Replace(Replace(Replace(number,"$",""), "(" , "-" ),")","" ),",","");
 			    				}
-			 var locationlist = [[126971,"E Bridgewater Ma"],[95192,"Wilmington MA"],[127565,"Hopkinton, Ma"],[118548,"Franklin MA"],[127698,"Halifax, Ma"]];
+			    				
+			    				/*HARD CODED LOCATION CODES!!!!!!!!!!
+			    				HARD CODED LOCATION CODES!!!!!!!!!!
+			    				HARD CODED LOCATION CODES!!!!!!!!!!
+			    				HARD CODED LOCATION CODES!!!!!!!!!!
+			    				*/
+			 var locationlist = [[126971,"E Bridgewater MA"],[95192,"Wilmington MA"],[127565,"Hopkinton MA"],[118548,"Franklin MA"],[127698,"Halifax MA"]];
 			 for(var acts in newFile){
 			 	if(acts['ACCESS']!='ACCESS'&&len(acts['ACCESS'])){
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		 addComm.setTYPE("NEW");
-				 		 addComm.setMOBILEID(acts['MOBILE ID']);
+				 		 addComm.setMOBILEID(changeMOBIL(acts['MOBILE ID']));
 				 		 addComm.setCUSTOMERNAME(acts['Customer Name']);
 				 		
 				 		 addComm.setDATE(changeNEWdate(acts['Date']));
@@ -91,8 +109,8 @@
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		addComm.setTYPE("UPG");
-				 		 addComm.setMOBILEID(acts['MOBIL']);
-				 		 addComm.setALTMOBIL(acts['ALT MOBIL']);
+				 		 addComm.setMOBILEID(changeMOBIL(acts['MOBIL']));
+				 		 addComm.setALTMOBIL(changeMOBIL(acts['ALT MOBIL']));
 				 		 addComm.setCUSTOMERNAME(acts['CUSTOMER NAME']);
 				 		 
 				 		 addComm.setDATE(changeUPGdate(acts['DATE']));
@@ -118,7 +136,7 @@
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		addComm.setTYPE("INS");
-				 		 addComm.setMOBILEID(acts['MOBILE ID']);
+				 		 addComm.setMOBILEID(changeMOBIL(acts['MOBILE ID']));
 				 		 for(var locs in locationlist){
 				 		 	if(locs[1]==acts['LOCATION']){
 				 		 		addComm.setLOCATION(locs[2]);
@@ -134,6 +152,56 @@
 							} 
 				 	}
 			 }
+			 /*for(var acts in cbFile){
+			 	if(acts['Location']!='Location'&&len(acts['Location'])){
+				 	try {
+				 		var addComm = entityNew('comms');
+				 		addComm.setTYPE("CB");
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Mobile ID']));
+				 		 for(var locs in locationlist){
+				 		 	if(locs[1]==acts['Location']){
+				 		 		addComm.setLOCATION(locs[2]);
+				 		 	}
+				 		 }
+				 		 addComm.setCUSTOMERNAME(acts['Name']);
+				 		 addComm.setSTARTDATE(changeNEWdate(acts['Master Svc. Date']));
+				 		 
+				 		 addComm.setRECEIVABLE(moneyReplace(acts['Receivable']));
+				 		 addComm.setADC(moneyReplace(acts['ADC']));
+				 		 addComm.setCMSN(moneyReplace(acts['Charge Back']));
+				 		 EntitySave(addComm);
+				 		 
+				 	}catch(Exception ex) {
+			    				WriteOutput("<p>#ex.message#</p>"); 
+							} 
+				 	}
+			 }*/
+			 /*for(var acts in deactFile){
+			 	if(acts['Location']!='Location'&&len(acts['Location'])){
+				 	try {
+				 		var addComm = entityNew('comms');
+				 		addComm.setTYPE("DEACT");
+				 		addComm.setCUSTOMERNAME(acts['Name']);
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Mobile ID']));
+				 		 //addComm.setDATE(changeUPGdate(acts['Begin Date']));
+				 		 for(var locs in locationlist){
+				 		 	if(locs[1]==acts['Location']){
+				 		 		addComm.setLOCATION(locs[2]);
+				 		 	}
+				 		 }
+				 		 addComm.setSTARTDATE(changeNEWdate(acts['Master Svc. Date']));
+				 		 
+				 		 addComm.setRECEIVABLE(moneyReplace(acts['Receivable']));
+				 		 addComm.setADC(moneyReplace(acts['ADC']));
+				 		 addComm.setCMSN(moneyReplace(acts['Charge Back Amt']));
+				 		 EntitySave(addComm);
+				 		
+				 		 
+				 	}catch(Exception ex) {
+			    				WriteOutput("<p>#ex.message#</p>"); 
+							} 
+				 	}
+			 }*/
 			 
     	
     				

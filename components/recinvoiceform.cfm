@@ -11,26 +11,26 @@
 
 
 <cfset dest = getTempDirectory()>
-<cffile action="upload" destination="#dest#" filefield="inventoryFile" result="inventoryFile"
+<cffile action="upload" destination="#dest#" filefield="masterfile" result="masterfile"
         nameconflict="makeunique">
 
         
-<cfif inventoryFile.fileWasSaved >
-	<cfset inventory = inventoryFile.serverDirectory & "/" & inventoryFile.serverFile>
+<cfif masterfile.fileWasSaved >
+	<cfset master = masterfile.serverDirectory & "/" & masterfile.serverFile>
 	
 	
-	<cfif isSpreadsheetFile(inventory)>
-		<cfspreadsheet action="read" src="#inventory#" query="inventoryData" headerrow="3">
+	<cfif isSpreadsheetFile(master) >
+		<cfspreadsheet action="read" src="#master#" query="masterData" headerrow="1">
 		
 	
 	
 		               
-		<cffile action="delete" file="#inventory#">
+		<cffile action="delete" file="#master#">
 		
 	
 		<cfset showForm = false>
 	<cfelse>
-		<cffile action="write" file="#inventory#" output="" addnewline="false"/>
+		<cffile action="write" file="#master#" output="" addnewline="false"/>
 		
 		
 		<cfset errors = "One or More of the files was not an Excel file.">
@@ -64,33 +64,25 @@
 		}
 	</style>
 	
-	<cfset metadata = getMetadata(inventoryData)>
-
-	<cfset colList = "">
-
-	<cfloop index="col" array="#metadata#">
-	
-		<cfset colList = listAppend(colList, col.name)>
-	</cfloop>
-
-	
 <cfscript>
-		
-		 logic = createObject("component", "logic");
-		
-		//numberStruct = logic.testGet();
-		numberStruct =  logic.setInventory(inventoryData , inventoryFile.serverFile);
+		writedump(masterfile.serverFile);
 		
 		
-		//myReturn = TheObject.findingTargetColumns(data);
+			logic = createObject("component", "logic");
+			numberStruct =  logic.setReceiveBill
+			
+			(masterData , masterFile.serverFile);
 		
+		
+	
 	</cfscript>
 	<script type="text/javascript" >
 		window.location.href = "/";
+		
 	</script>
 	
 
-	<cfif inventoryData.recordCount is 1>
+	<cfif masterData.recordCount is 1>
 		<p>
 			This spreadsheet appeared to have no data.
 		</p>

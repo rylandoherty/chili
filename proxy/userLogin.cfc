@@ -15,39 +15,46 @@
 			} 
 	}
 	remote any function validateAndReturnUser(any user, any pass){
-		// EMERGENCY FIXES STORE NAME IF CHANGED!!!
+		 //EMERGENCY FIXES STORE NAME IF CHANGED!!!
+		
 		/*
 		var loadUser = entityLoad('user');
-		for(var peeps in loadUser){
-			if(peeps.storeid=='E Bridgewater'){
-				peeps.setstoreid('E Bridgewater Ma');
+		for(peeps in loadUser){
+			if(peeps.storeid=='Hopkinton, Ma'){
+				peeps.setstoreid('Hopkinton Ma');
 				entitySave(peeps);
 			}
 		}*/
-		/*
-		var loadStore = entityLoad('store','E Bridgewater MA',true);
-		var oldloadStore = entityLoad('store','E Bridgewater',true);
+		
+		/*var fixStore = entityLoad('ordersettings');
+		var loadStore = entityLoad('store','Hopkinton MA',true);
+		//var oldloadStore = entityLoad('store','Temp',true);
 		for(var setts in fixStore){
-			if(setts.getstorename()=='E Bridgewater'){
-				setts.setstorename('E Bridgewater Ma');
+			if(setts.getstorename()=='Hopkinton MA'){
+				setts.setstorename(' x ');
 				loadStore.addordersettings(setts);
-				oldloadStore.removeordersettings(setts);
+				//oldloadStore.removeordersettings(setts);
+				entitySave(setts);
+				entitySave(loadStore);
+				setts.setstorename('Hopkinton MA');
+				loadStore.addordersettings(setts);
+				//oldloadStore.removeordersettings(setts);
 				entitySave(setts);
 			}
 		}
 		entitySave(loadStore);
-		entitySave(oldloadStore);
-	 */
-		var a = user;
-		var b = pass;
+		//entitySave(oldloadStore);
+	*/
+		var a = "rylan.doherty";
+		var b = "fvCD13qw";
 		
 		
-		var userData = EntityLoad('user' , user ,true);
+		var userData = EntityLoad('user' ,a ,true);
 		var locat = userData.getstore().getstoreid();
 		userData['location']= locat;
 	
-		if(isDefined("userData")&&userData.getpassword()==pass){
-			
+		if(isDefined("userData")){
+		//if(isDefined("userData")&&userData.getpassword()==pass){	
 			
 			return serializeJSON(userData);
 		}

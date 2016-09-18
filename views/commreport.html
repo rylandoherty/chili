@@ -1,0 +1,50 @@
+<select ng-model="Storez" >
+  			
+  <option ng-repeat="store in salescomm | orderBy:'toString()'" value="{{store['storeid']}}">{{store['storeid']}}</option>
+
+</select>
+<select ng-model="Selection" >
+  			
+  <option value="InvoicesThatAreFilled">Complete</option>
+  <option value="salesFromRQthatArePartial">Partial</option>
+  <option value="salesFromRQthatFailed">Not Found</option>
+</select>
+<select ng-model="FilterByType" >
+  			
+  <option value="NEW">NEW</option>
+  <option value="UPG">UPG</option>
+  <option value="INS">INS</option>
+  <option value="CB">CB</option>
+  <option value="DEACT">DEACT</option>
+</select>
+<body>
+	 <div ng-repeat="store in salescomm" ng-if="store['storeid']==Storez">
+	 	<table >
+	 		<tr>
+	 			<td >
+	 				<td >
+	 				salesid
+	 				FINANCED
+	 				COMM
+	 				VZWFINANCED
+	 				VZWREBATES
+	 			</td>
+	 			</td>
+	 		</tr>
+	 		<tr ng-repeat="sales in store['AprilCommReport'][Selection]">
+	 			<td >
+	 				{{sales['salesid']}}
+	 				{{sales['FINANCED']}}
+	 				{{sales['COMM']}}
+	 				{{sales['VZWFINANCED']}}
+	 				{{sales['VZWREBATES']}}
+	 			</td>
+	 			
+	 			
+	 		</tr>
+	 			
+	 	</table>
+	 	
+	 </div>
+</body>
+	

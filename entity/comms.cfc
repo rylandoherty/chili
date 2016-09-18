@@ -26,7 +26,7 @@
    <cfproperty name="ALTMOBIL">
    <cfproperty name="MOBIL">
   <cfproperty name="NOTES">
-   
+   <cfproperty name="STARTDATE">
 
    
    <!---INSURANCE

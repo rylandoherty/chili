@@ -72,8 +72,8 @@ angular.module('ngViewExample', ['ngRoute', 'ngAnimate','myApp'])
      
       .when('/Comm', {
         templateUrl: '/views/commreport.html',
-        controller: 'DailyReportCtrl',
-        controllerAs: 'dailyreport'
+        controller: 'commctrl',
+        controllerAs: 'commreport'
       })
       .when('/fdsfds', {
         templateUrl: '/abc',

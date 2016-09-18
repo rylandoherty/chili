@@ -46,14 +46,19 @@ function Ctrl2($scope, sharedProperties) {
 	}
 	else{
 		
-	$window.userTag =userid.value;
-	$window.storeStuff = e.loadStoreStuff();
-	$window.uploadTimes = $window.storeStuff[3];
-	$window.commList = $window.storeStuff[4];
-	$window.theProductList = $window.storeStuff[1];
-	$window.salesQuery = $window.storeStuff[0];
-	$window.userQuery = $window.storeStuff[2];
-	console.log($window.storeStuff);
+	$window.userTag = userid.value;
+	//$window.storeStuff = e.loadStoreStuff();
+	//$window.uploadTimes = $window.storeStuff[3];
+	//$window.commList = $window.storeStuff[4];
+	/*$window.receivedList = $window.storeStuff.receivedList;
+	$window.rmaList = $window.storeStuff.rmaList;
+	$window.transfers = $window.storeStuff.transfersList;
+	$window.theProductList = $window.storeStuff.productList;
+	$window.salesQuery = $window.storeStuff.storeList;
+	$window.uploadRecord = $window.storeStuff.uploadRecord;
+	$window.receivedInvoice = $window.storeStuff.receivedList;*/ 
+	//$window.userQuery = $window.storeStuff[2];
+	//console.log($window.storeStuff);
 	}
 	
 	

@@ -5,7 +5,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular-route.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular-animate.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="/viewScript.js"></script>
+	<script src="/viewScript.js?v=55"></script>
 	<script src="/ng/chili.js"></script>
 	<script src="/js/items2.js"></script>
 	<script src="/ng/modal.js"></script>
@@ -19,12 +19,6 @@
 	<script src="/ng/dailyreportctrl.js"></script>
 	<script src="/ng/commctrl.js"></script>
 	
-
-
-
-
-
-
 <script src="../js/ngDialog.js"></script>
 	<cfajaxproxy cfc="components.login" jsclassname="jsLogin" >
 	<cfajaxproxy cfc="proxy.userLogin" jsclassname="jsLogin2" >
@@ -32,8 +26,25 @@
 	<cfajaxproxy cfc="proxy.empgoalctrl" jsclassname="jsEmpController">
 	<cfajaxproxy cfc="proxy.SetProductList" jsclassname="jsProductController" >
 	<cfajaxproxy cfc="proxy.SetActivations" jsclassname="jsActivationController" >
-	
+
 	<cfscript> 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 
 </cfscript>
@@ -65,26 +76,24 @@
   
   <body ng-app=ngViewExample>
 
-
-		
     	
     		
-   <div ng-controller="MainCtrl as user">
-   	
+   <div ng-controller="MainCtrl as user" ng-init="passUserData()" >
    	
    	
 	<ul style="float:left" >  
    
    		  <li ng-if="level<=1"><a  href="/Upload">Upload</a></li>
-		  <li ng-if="level<=3"><a  href="/Stores">Stores</a></li>
-		  <li ng-if="level<=3"><a  href="/Activations">Activations</a></li>
-		  <li ><a  href="/Login">Login</a></li>
-		  <li ng-if="level<=2"><a  href="/Inventory">Inventory</a></li>
-		 
-		  <li ng-if="level<=3"><a  href="/MTDEmp">Employee</a></li>
+   		  <li ng-if="level<=2"><a  href="/Inventory">Inventory</a></li>
 		  <li ng-if="level<=2"><a  href="/ProductControl">Order Control</a></li>
-		  <li ng-if="level<=1"><a  href="/Comm">Commission</a></li>
-		
+		  
+		  
+		  
+		  <li ng-if="level<=0"><a  href="/Stores">Stores</a></li>
+		  <li ng-if="level<=0"><a  href="/Activations">Activations</a></li>
+		  <li ng-if="level<=0"><a  href="/Comm">Commission</a></li>
+		  <li ng-if="level<=0"><a  href="/MTDEmp">Employee</a></li>
+		<li ><a  href="/Login">Login</a></li>
 		</ul>
 
 

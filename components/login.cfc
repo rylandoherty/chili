@@ -1,38 +1,7 @@
 <cfcomponent>
 	<cfscript>
 	
-/*
-<cfif rq4file.fileWasSaved and finfile.fileWasSaved and vzwfile.fileWasSaved>
-	<cfset rq4 = rq4file.serverDirectory & "/" & rq4file.serverFile>
-	<cfset fin = finfile.serverDirectory & "/" & finfile.serverFile>
-	<cfif isSpreadsheetFile(rq4) and isSpreadsheetFile(fin)>
-		<cfspreadsheet action="read" src="#rq4#" query="rq4Data" headerrow="3">
-		<cfspreadsheet action="read" src="#fin#" query="finData" headerrow="3">
-	<!---
-		<cfspreadsheet action="read" src="#vzw#" query="newData" headerrow="1"
-		               sheetname="New">
-		<cfspreadsheet action="read" src="#vzw#" query="upgData" headerrow="1"
-		               sheetname="Upgrade">
-		<cfspreadsheet action="read" src="#vzw#" query="insData" headerrow="1"
-		               sheetname="Mobile Adjustment">
-		<cfspreadsheet action="read" src="#vzw#" query="cbData" headerrow="1"
-		               sheetname="Chargebacks">
-		<cfspreadsheet action="read" src="#vzw#" query="deactData" headerrow="1"
-		               sheetname="Deact Upgrade">--->
-		               
-		<cffile action="delete" file="#rq4#">
-		<cffile action="delete" file="#fin#">
-		
-		<cfset showForm = false>
-	<cfelse>
-		<cffile action="write" file="#rq4#" output="" addnewline="false"/>
-		<cffile action="write" file="#fin#" output="" addnewline="false"/>
-		
-		<cfset errors = "One or More of the files was not an Excel file.">
-	</cfif>
-<cfelse>
-	<cfset errors = "The file was not properly uploaded.">
-</cfif>*/
+
 	
 	
 	
@@ -79,8 +48,10 @@
 		var storeList = EntityLoad('store');
 		var productList = EntityLoad('productlist');
 		for(var i = 1;i<=arraylen(productList);i++){
+			
 			productList[i]['inventory'] = productList[i].getInventory();
 			productList[i]['settings'] = productList[i].getordersettings();
+			
 		}
 		for(var i = 1;i<=arraylen(storeList);i++){
 		
@@ -88,24 +59,39 @@
 			if(dist=='District Sanat')
 				userList[arrayLen(userList)+1]= (storeList[i].getuser());
 			storeList[i]['user'] = storeList[i].getuser();
-			storeList[i]['sales'] = storeList[i].getsales();
-			for(var sales in storeList[i]['sales']){
+			//storeList[i]['sales'] = storeList[i].getsales();
+			//for(var sales in storeList[i]['sales']){
 				
-				sales['saledetails'] = sales.getsaledetails();
+				//sales['saledetails'] = sales.getsaledetails();
 				
-			}
+			//}
 		}
+		var rmaList = EntityLoad('rma');
+		var transfersList = EntityLoad('transfers');
+		var receivedList = EntityLoad('received');
+		var uploadrecord = EntityLoad('uploadrecord');
+		var receivedInvoice = EntityLoad('receivedInvoice');
+		/*
 		var uploadrecordlist = entityload('uploadrecord');
 		var comms = entityload('comms');
-		
-		
-		return [storeList,productList,userList,uploadrecordlist,comms];
+		*/
+		var Glob ={};
+		Glob.receivedInvoiceList = receivedInvoice;
+		Glob.storeList = storeList;
+		Glob.productList = productList;
+		Glob.rmaList = rmaList;
+		Glob.transfersList = transfersList;
+		Glob.receivedList = receivedList;
+		Glob.uploadRecord = uploadRecord;
+		return Glob;
+			//return [storeList,productList,rmaList,transfersList,receivedList];
+		//return [storeList,productList,userList,uploadrecordlist,comms];
 		} catch(Exception ex) { 
     		WriteOutput("<p>#ex.message#</p>"); 
 		}
 } 
 
-	
+	/*
 	remote any function xyz(){
 	try { 
 		var newSale = EntityLoad('sales');
@@ -120,7 +106,7 @@
 } catch(Exception ex) { 
     WriteOutput("<p>#ex.message#</p>"); 
 } 
-	}
+	}*/
 
 
 	

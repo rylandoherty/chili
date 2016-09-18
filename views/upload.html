@@ -4,7 +4,8 @@
 
 
 
-<ul >
+<ul>
+	<!-- 
 	<li class ="b">
 	 	 <form action="/components/form.cfm" enctype="multipart/form-data" method="post">
  Detail Report
@@ -16,23 +17,41 @@
 
 	</li>
 	<p>
+		-->
 		
-		
-	</p>
-	<li class="b">
-	 	 <form action="/components/inventoryform.cfm" enctype="multipart/form-data" method="post">
- Inventory
-    <input type="file" name="inventoryfile"/>
+	
+		<li class="b">
+			
+	 	 <form action="/components/masterform.cfm" enctype="multipart/form-data" method="post">
+ Master RQ (Third line header)<br><br> 1.Inventory Listing <br> 2.RMA History Report <br> 3.Transfer History <br>  4.Receiving Invoices History
+    <input type="file" name="masterfile"/>
     
     <input type="submit" value="Submit" name="submit" />
 </form> 
 		</li>
 		
 		<li class="b">
-			
-	 	 <form action="/components/commsheetform.cfm" enctype="multipart/form-data" method="post">
- Comm Sheet File
-    <input type="file" name="commsheetfile"/>
+<form action="" enctype="multipart/form-data" method="post">
+ Comm
+    <input type="file" name="masterfile"/>
+    
+    <input type="submit" value="Submit" name="submit" />
+</form> 
+		</li>
+		
+		<li class="b">
+<form action="/components/recinvoiceform.cfm" enctype="multipart/form-data" method="post">
+ 	InvReceipt - working (rename file to include exact store name) (exact same file name per month)
+    <input type="file" name="masterfile"/>
+    
+    <input type="submit" value="Submit" name="submit" />
+</form> 
+		</li>
+		
+		<li class="b">
+	 	 <form action="" enctype="multipart/form-data" method="post">
+ Billpay
+    <input type="file" name="masterfile"/>
     
     <input type="submit" value="Submit" name="submit" />
 </form> 

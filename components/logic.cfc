@@ -12,18 +12,21 @@
 	    					
 	    					
 		}
-		
-		
-		public any function organizeSales(PDRData,PaymentData,PDRfile,Paymentfile){
-			  var uploadStuff = EntityNew('uploadrecord');
-				  uploadStuff.settype('sales');
-				  uploadStuff.settime(Now());
-				  uploadStuff.setfilename(PDRfile);
-				  entitySave(uploadStuff);
-			 private any function moneyReplace(number){
+		private any function moneyReplace(number){
 			 							return Replace(Replace(Replace(Replace(number,"$",""), "(" , "-" ),")","" ),",","");
 			    				}
-    		 for(var sales in PaymentData){
+		
+		public any function organizeSales(PDRData,PaymentData,PDRfile,Paymentfile){
+			
+			  var uploadStuff = EntityNew('uploadrecord');
+			  
+				  uploadStuff.settype('sales');
+				  
+				  uploadStuff.settime(Now());
+				  
+				  uploadStuff.setfilename(PDRfile);
+				  entitySave(uploadStuff);
+			  for(var sales in PaymentData){
 	    		if(sales['Invoice ##']!='Invoice ##'&&len(sales['Invoice ##'])){
 	    			
 		    			try { 
@@ -72,7 +75,7 @@
 									moneyReplace(sales['AMEX-Integrated'])+
 									moneyReplace(sales['Visa-Integrated'])
 								);
-								newSale.setTRADEIN(moneyReplace(sales['Phone Trade In Store']));
+								//newSale.setTRADEIN(moneyReplace(sales['Phone Trade In Store']));
 								EntitySave(newSale);
 								ormflush();
 								thisSale = EntityLoad('sales',sales['Invoice ##'],true);
@@ -304,6 +307,295 @@
 		}
 		*/
 		
+		
+			public any function setRMAHistory(RMAData,filename){
+				 var uploadStuff = EntityNew('uploadrecord');
+				  uploadStuff.settype('RMAHistory');
+				  uploadStuff.settime(Now());
+				  uploadStuff.setfilename(filename);
+				  entitySave(uploadStuff);
+				 var oldStock = EntityLoad('rma');
+				for(var i = 1;i<=arrayLen(oldStock);i++){
+					entityDelete(oldStock[i]);
+				}
+				ormFlush();
+				ormreload();
+				for(var item in RMAData){
+									var found= false;
+    			if(item['Vendor']!='Vendor'&&len(item['Vendor'])){
+	    			
+	    			try{ 
+	    				var storeQuery = entityLoad( "store", item['Location'] , true );
+	    					
+	    					
+	    					
+	    					//var selt = ORMExecuteQuery("from Sales where store.storeid=:country", {country='E Bridgewater'});
+	    					
+	    					if(!isDefined("storeQuery")){
+	    						storeQuery = EntityNew('store');
+	    						storeQuery.setstoreid(item['Location']);
+	    						EntitySave(storeQuery);
+	    						ormflush();
+	    					}
+	    					found=false;
+	    							var product = EntityNew('rma');
+								    product.setrmaid(item['RMA ##']); 
+								    product.setVendor(item['Vendor']); 
+								   // product.setstore(item['Location']);
+									product.setstorename(item['Location']);
+									product.setTotalCost(item['Total Cost']);
+								    product.setTotalCostCredited(item['Total Cost Credited']);
+								    product.setVendorRMA(item['Vendor RMA ##']); 
+								    product.setWayBill(item['Way Bill ##']);  
+								    product.setCreditInvoice(item['Credit Invoice ##']);  
+								    product.setShippingCost(item['Shipping Cost']); 
+								    product.setShippedAway(item['Shipped Away']);
+								    product.setCommitted(item['Committed']);
+								    product.setCommittedOn(item['Committed On']);
+								    product.setCompleted(item['Completed']);
+								    product.setCreatedOn(item['Created On']);
+								    product.setCreatedBy(item['Created By']);
+								    product.setComments(item['Comments']);
+									product.setReceivingComments(item['Receiving Comments']);
+									product.setRegion(item['Region']);
+								    product.setDistrict(item['District']);
+								    
+								    
+								    EntitySave(product); 
+								    
+								    storeQuery.addrma(product);
+								    entitySave(storeQuery);
+								   ormflush(); 
+								   
+					} catch(Exception ex) { 
+	    				WriteOutput("<p>#ex.message#</p>"); 
+						} 
+	    			}
+	    			
+	    			}
+    			
+    					
+    					
+				
+			} 
+			
+			
+			
+			public any function setReceiveBill(ReceivingInvoiceData,filename){
+				 var uploadStuff = EntityNew('uploadrecord');
+				  uploadStuff.settype('EquipmentBill');
+				  uploadStuff.settime(Now());
+				  uploadStuff.setfilename(filename);
+				  entitySave(uploadStuff);
+				 var oldStock = EntityLoad('receivedInvoice');
+				for(var i = 1;i<=arrayLen(oldStock);i++){
+					entityDelete(oldStock[i]);
+				}
+				ormFlush();
+				ormreload();
+				for(var item in ReceivingInvoiceData){
+									var found= false;
+    			if(item['Date']!='Date'&&len(item['Date'])){
+	    			
+	    			try{ 
+	    				
+	    				
+	    				var storeQuery = entityLoad( "store");
+	    				
+	    				for(var stores in StoreQuery){
+	    					
+	    					
+	    					
+	    					if(filename contains stores.getstoreid()){
+	    						
+	    						storeQuery = entityLoad( "store", stores.getstoreid() , true );
+	    					}
+	    				}
+	    					
+	    					
+	    					
+	    					//var selt = ORMExecuteQuery("from Sales where store.storeid=:country", {country='E Bridgewater'});
+	    					
+	    					/*if(!isDefined("storeQuery")){
+	    						storeQuery = EntityNew('store');
+	    						storeQuery.setstoreid(stores.getstoreid());
+	    						EntitySave(storeQuery);
+	    						ormflush();
+	    					}*/
+	    					found=false;
+	    							var product = EntityNew('receivedInvoice');
+								   
+								    
+								    product.setreceivedInvoiceid(item['INVOICE ##']);  
+								   
+								    product.setDate(item['Date']);  
+								    product.setPAYMENTS(item['PAYMENTS']); 
+								    product.setStoreTransfer(item['Store Transfer']); 
+								    product.setVERIZONAMOUNT(item['VERIZON AMOUNT']);  
+								    product.setRELIANCEAMOUNT(item['RELIANCE AMOUNT']); 
+								    product.setBRIGHTPOINTAMOUNT(item['BRIGHT POINT AMOUNT']);  
+								    product.setVZWRMA(item['VZW- RMA']); 
+								    product.setIceMobility(item['Ice Mobility']); 
+								    product.setMisc(item['Misc']); 
+								    product.setfilename(filename); 
+								    
+								    
+								    
+								    EntitySave(product); 
+								    
+								    storeQuery.addreceivedInvoice(product);
+								    entitySave(storeQuery);
+								   ormflush(); 
+								   
+					} catch(Exception ex) { 
+	    				WriteOutput("<p>#ex.message#</p>"); 
+						} 
+	    			}
+	    			
+	    			}
+    			
+    					
+    					
+				
+			} 
+			
+			
+			
+			
+			public any function setReceived(ReceivedData,filename){
+				 var uploadStuff = EntityNew('uploadrecord');
+				  uploadStuff.settype('Received');
+				  uploadStuff.settime(Now());
+				  uploadStuff.setfilename(filename);
+				  entitySave(uploadStuff);
+				 var oldStock = EntityLoad('received');
+				for(var i = 1;i<=arrayLen(oldStock);i++){
+					entityDelete(oldStock[i]);
+				}
+				ormFlush();
+				ormreload();
+				for(var item in ReceivedData){
+									var found= false;
+    			if(item['Received On']!='Received On'&&len(item['Received On'])){
+	    			
+	    			try{ 
+	    				var storeQuery = entityLoad( "store", item['Received At'] , true );
+	    					
+	    					
+	    					
+	    					//var selt = ORMExecuteQuery("from Sales where store.storeid=:country", {country='E Bridgewater'});
+	    					
+	    					if(!isDefined("storeQuery")){
+	    						storeQuery = EntityNew('store');
+	    						storeQuery.setstoreid(item['Received At']);
+	    						EntitySave(storeQuery);
+	    						ormflush();
+	    					}
+	    							found=false;
+	    							var product = EntityNew('received');
+								    product.setreceiveid(item['Receiving ##']); 
+								    product.setReference(item['Reference ##']); 
+								    product.setReceivedOn(item['Received On']);
+								    product.setReceivedAt(item['Received At']);
+								    product.setReceivedBy(item['Received By']); 
+								    product.setVendor(item['Vendor']);
+								    product.setVendorInvoice(item['Vendor Invoice ##']); 
+								    product.setPosted(item['Posted']);  
+								    product.setPaid(item['Paid']);  
+								    product.setFlagged(item['Flagged']);
+ 									product.setTotalInvoice(item['Total Invoice']);
+								    product.setReconciliationComments(item['Reconciliation Comments']);
+								    product.setOrderingComments(item['Ordering Comments']);
+								    product.setReceivingComments(item['Receiving Comments']);
+								    product.setRegion(item['Region']);
+								    product.setDistrict(item['District']);
+								    
+								    EntitySave(product); 
+								    storeQuery.addreceived(product);
+								    entitySave(storeQuery);
+								   ormflush(); 
+								   
+					} catch(Exception ex) { 
+	    				WriteOutput("<p>#ex.message#</p>"); 
+						} 
+	    			}
+	    			
+	    			}
+    			
+    					
+    					
+				
+			} 
+			public any function setTransfer(TransferData,filename){
+				 var uploadStuff = EntityNew('uploadrecord');
+				  uploadStuff.settype('Transfer');
+				  uploadStuff.settime(Now());
+				  uploadStuff.setfilename(filename);
+				  entitySave(uploadStuff);
+				 var oldStock = EntityLoad('transfers');
+				for(var i = 1;i<=arrayLen(oldStock);i++){
+					entityDelete(oldStock[i]);
+				}
+				ormFlush();
+				ormreload();
+				for(var item in TransferData){
+									var found= false;
+    			if(item['Committed']!='Committed'&&len(item['Committed'])){
+	    			
+	    			try{ 
+	    				var storeQuery = entityLoad( "store", item['Received At'] , true );
+	    					
+	    					
+	    					
+	    					//var selt = ORMExecuteQuery("from Sales where store.storeid=:country", {country='E Bridgewater'});
+	    					
+	    					if(!isDefined("storeQuery")){
+	    						storeQuery = EntityNew('store');
+	    						storeQuery.setstoreid(item['Received At']);
+	    						EntitySave(storeQuery);
+	    						ormflush();
+	    					}
+	    							found=false;
+	    							var product = EntityNew('transfers');
+								    product.settransferid(item['Transfer ##']); 
+								    
+								    product.setShippedFrom(item['Shipped From']); 
+								    product.setReceivedAt(item['Received At']);
+								    product.setTotalInvoice(item['Total Invoice']);
+								    product.setRequestedOn(item['Requested On']); 
+								    product.setCommitted(item['Committed']);
+								    product.setCommittedOn(item['Committed On']); 
+								    product.setCompleted(item['Completed']);  
+								    product.setBillTo(item['Bill To']);  
+								    product.setRequestedBy(item['Requested By']); 
+								    product.setRequestingComments(item['Requesting Comments']);
+								    product.setShippingComments(item['Shipping Comments']);
+								    product.setReceivingComments(item['Receiving Comments']);
+								    product.setCancelledOn(item['Cancelled On']);
+								    product.setCancelledBy(item['Cancelled By']);
+								    product.setShippedFromDistrict(item['Shipped From District']);
+								    product.setReceivedAtDistrict(item['Received At District']);
+								    product.setShippedFromRegion(item['Shipped From Region']);
+								    product.setReceivedAtRegion(item['Received At Region']);
+								    
+								    EntitySave(product); 
+								    storeQuery.addtransfers(product);
+								    entitySave(storeQuery);
+								   ormflush(); 
+								   
+					} catch(Exception ex) { 
+	    				WriteOutput("<p>#ex.message#</p>"); 
+						} 
+	    			}
+	    			
+	    			}
+    			
+    					
+    					
+				
+			} 
+			
+			
 		
 		
 			 //INVENTORY AND ORDERS

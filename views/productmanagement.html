@@ -17,7 +17,7 @@
   <input type="checkbox" ng-model="showHidden" checked="true"> SHOW HIDDEN </input>
     <p>
   	
-  		<button ng-repeat="focus in storeArray" ng-if="focus.district == 'District Sanat'"  ng-click="setstoreSelection(focus.storeid)"  >
+  		<button ng-repeat="focus in storeArray" ng-if="focus.district == 'District Sanat'&&(userThing.level<2||userThing.location==focus.storeid)"  ng-click="setstoreSelection(focus.storeid)"  >
   			<div>{{focus.storeid}}</div>
   		</button>
   		
@@ -27,17 +27,22 @@
   		<tr>
   		<td>Phone</td>
   		<td>Order</td>
+  		
   		<td>Cost</td>		
   		<td>Desired Count</td>		
-  		<td>Current Stock</td>		
+  		<td>Current Stock</td>
+  				
   		</tr>
   		<tr ng-repeat="abc in productList" ng-if="abc[storeSelection].order>0" ng-init="">
-  			
+  			`
   			<td><div>{{abc.name}}</div></td>
-  			<td><div>{{abc[storeSelection].order}}</div></td>
+  			<td> <input style="width:75px" ng-model="abc[storeSelection].trueorder" ng-change="changeOrder(abc,storeSelection, abc[storeSelection].trueorder)"  type="text" maxlength="8"
+    width=5 value="{{abc[storeSelection].trueorder}}" ></input> </td>
+  			
   			<td><div>{{abc[storeSelection].ordercost}}</div></td>
   			<td><div>{{abc[storeSelection].settings}}</div></td>
   			<td><div>{{abc[storeSelection].inventory}}</div></td>
+  			
   		</tr>
   		
   		

@@ -3,6 +3,11 @@
   <option ng-repeat="store in salescomm | orderBy:'toString()'" value="{{store['storeid']}}">{{store['storeid']}}</option>
 
 </select>
+<select ng-model="MonthSelection" ng-change="CheckComm(MonthSelection)">
+  <option ng-repeat="month in monthslist" value="{{month}}" >{{month}}</option>
+  
+</select>
+
 <select ng-model="Selection" >
   			
   <option value="InvoicesThatAreFilled">Complete</option>
@@ -17,6 +22,8 @@
   <option value="CB">CB</option>
   <option value="DEACT">DEACT</option>
 </select>
+
+
 <body>
 	 <div ng-repeat="store in salescomm" ng-if="store['storeid']==Storez">
 	 	<table >
@@ -47,4 +54,38 @@
 	 	
 	 </div>
 </body>
+<body>
+	 <div>
+	 	<table >
+	 		<tr>
+	 			
+	 				<td >date </td>
+	 				<td >type</td>
+	 				<td >device id</td>
+	 				<td >customer</td>
+	 				<td >mobileid</td>
+	 				<td >VZWREBATES</td>
+	 			
+	 			
+	 		</tr>
+	 		<tr ng-repeat="commListings in commissions">
+	 			<td >
+	 				<td >{{commListings['DATE']}}</td>
+	 				<td >{{commListings['TYPE']}}</td>
+	 				<td >{{commListings['DeviceID']}}</td>
+	 				<td >{{commListings['CUSTOMERNAME']}}</td>
+	 				<td >{{commListings['MOBILEID']}}</td>
+	 				<td >{{commListings['RECEIVABLE']+commListings['ADC']+commListings['CMSN']}}</td>
+	 			</td>
+	 			
+	 			
+	 		</tr>
+	 			
+	 	</table>
+	 	
+	 </div>
+</body>
+
+
+
 	

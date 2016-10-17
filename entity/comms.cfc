@@ -12,6 +12,7 @@
    
    
    <cfproperty name="MOBILEID">
+   <cfproperty name="DeviceID">
    <cfproperty name="CUSTOMERNAME">
    <cfproperty name="ORIGINAL">
    <cfproperty name="DATE">
@@ -21,12 +22,13 @@
    <cfproperty name="ADC">
    <cfproperty name="CMSN">
    <cfproperty name="SPIFF">
-   
+   <cfproperty name="monthGroup">
    <cfproperty name="TYPE">
    <cfproperty name="ALTMOBIL">
    <cfproperty name="MOBIL">
   <cfproperty name="NOTES">
    <cfproperty name="STARTDATE">
+   <cfproperty name="ENDDATE">
 
    
    <!---INSURANCE

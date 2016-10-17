@@ -32,12 +32,12 @@ function ProductCtrl($routeParams, $scope, $window) {
 	}
 		$scope.userThing =  $window.userStuff;
 		$scope.productList =  $window.theProductList;
-		$scope.storeArray =   $window.storeStuff.storeList;
+		$scope.storeArray =   $window.storeList;
 		$scope.totalcost = 0;
-		console.log($window);
+		
 	
 	for(var stores in $scope.storeArray){
-		console.log($scope.storeArray);
+		
  					$scope.productList[$scope.storeArray[stores].storeid]={};
  					$scope.productList[$scope.storeArray[stores].storeid].ordertotalcost = 0;
 				}
@@ -54,7 +54,7 @@ function ProductCtrl($routeParams, $scope, $window) {
 				for(var stock in $scope.productList[products].inventory){
  				
  				if(angular.isDefined($scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory)){
- 				$scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory += 1;
+ 					$scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory += 1;
  				}
  				else
  				{
@@ -134,7 +134,7 @@ function ProductCtrl($routeParams, $scope, $window) {
 	
 	
 	$scope.gettotalcost = function (store){
-		console.log(store);
+		
 		$scope.productList[store]['ordertotalcost'] = 0;
 		
 		for(var products in $scope.productList){

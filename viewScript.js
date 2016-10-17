@@ -40,6 +40,19 @@ angular.module('ngViewExample', ['ngRoute', 'ngAnimate','myApp'])
        controllerAs: 'store'
        
       })
+      
+       .when('/OrderCycle', {
+      	 templateUrl: '/views/equipmentordering.html',
+        controller: 'OrderCycleCtrl',
+       controllerAs: 'ordercycle'
+       
+      })
+      .when('/VendorMap', {
+      	 templateUrl: '/views/mappingVendors.html',
+        controller: 'OrderCycleCtrl',
+       controllerAs: 'ordercycle'
+       
+      })
       .when('/Invoice/:invoice', {
       	
         templateUrl: '/views/saledetail.html',

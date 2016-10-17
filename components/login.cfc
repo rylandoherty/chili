@@ -59,30 +59,41 @@
 			if(dist=='District Sanat')
 				userList[arrayLen(userList)+1]= (storeList[i].getuser());
 			storeList[i]['user'] = storeList[i].getuser();
-			//storeList[i]['sales'] = storeList[i].getsales();
-			//for(var sales in storeList[i]['sales']){
-				
-				//sales['saledetails'] = sales.getsaledetails();
-				
-			//}
+			storeList[i]['sales'] = storeList[i].getsales();
+			for(var sales in storeList[i]['sales']){
+				sales['saledetails'] = sales.getsaledetails();
+				}
 		}
 		var rmaList = EntityLoad('rma');
 		var transfersList = EntityLoad('transfers');
 		var receivedList = EntityLoad('received');
+		var comms = EntityLoad('comms');
 		var uploadrecord = EntityLoad('uploadrecord');
 		var receivedInvoice = EntityLoad('receivedInvoice');
+		
+		for(var i = 1;i<=arrayLen(receivedInvoice);i++){
+			receivedInvoice[i]['store'] = receivedInvoice[i].getstore().getstoreid();
+		}
+			
+			//writedump(comms);
+		
 		/*
 		var uploadrecordlist = entityload('uploadrecord');
 		var comms = entityload('comms');
 		*/
 		var Glob ={};
+		
+		Glob.userList = userList;
 		Glob.receivedInvoiceList = receivedInvoice;
 		Glob.storeList = storeList;
 		Glob.productList = productList;
+		//Glob.comms = comms;
 		Glob.rmaList = rmaList;
 		Glob.transfersList = transfersList;
 		Glob.receivedList = receivedList;
 		Glob.uploadRecord = uploadRecord;
+		
+		
 		return Glob;
 			//return [storeList,productList,rmaList,transfersList,receivedList];
 		//return [storeList,productList,userList,uploadrecordlist,comms];

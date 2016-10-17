@@ -1,4 +1,4 @@
-<cfcomponent persistent="true" entityname="User" table="User"> 
+<cfcomponent persistent="true" entityname="User" table="User" > 
     <cfproperty name="userid" fieldtype="id"> 
     <cfproperty name="password"> 
     <cfproperty name="level">
@@ -13,4 +13,5 @@
     <cfproperty name="accessoryperboxgoal">
     <cfproperty name="profitperboxgoal">
     <cfproperty name="hours">
+    <cfproperty name="isHidden" update="true">
 </cfcomponent>

@@ -22,15 +22,15 @@
 	<cfif isSpreadsheetFile(comm)>
 		
 		<cfspreadsheet action="read" src="#comm#" query="newData" headerrow="1"
-		               sheetname="New">
+		               sheetname="Activations">
 		<cfspreadsheet action="read" src="#comm#" query="upgData" headerrow="1"
 		               sheetname="Upgrade">
 		<cfspreadsheet action="read" src="#comm#" query="insData" headerrow="1"
-		               sheetname="Mobile Adjustment">
+		               sheetname="Mobile Adj">
 		<cfspreadsheet action="read" src="#comm#" query="cbData" headerrow="1"
 		               sheetname="Chargebacks">
 		<cfspreadsheet action="read" src="#comm#" query="deactData" headerrow="1"
-		               sheetname="Deact Upgrade">
+		               sheetname="Upgrade Deact">
 	
 	
 		               
@@ -86,7 +86,7 @@
 		//writeDump(deactData);
 		
 		//numberStruct = logic.testGet();
-		numberStruct =  logic.saveComm(newData,upgData,insData,cbData,deactData);
+		numberStruct =  logic.saveComm(newData,upgData,insData,cbData,deactData,commsheetFile.serverFile);
 		
 		
 		//myReturn = TheObject.findingTargetColumns(data);

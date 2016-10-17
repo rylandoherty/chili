@@ -65,7 +65,7 @@
 	</style>
 	
 <cfscript>
-		writedump(masterfile.serverFile);
+		
 		
 		
 			logic = createObject("component", "logic");
@@ -77,7 +77,7 @@
 	
 	</cfscript>
 	<script type="text/javascript" >
-		window.location.href = "/";
+		//window.location.href = "/";
 		
 	</script>
 	

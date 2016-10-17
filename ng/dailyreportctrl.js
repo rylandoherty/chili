@@ -11,8 +11,9 @@ DailyReportCtrl.$inject = ['$routeParams','$scope','$window',];
 // Now create our controller function with all necessary logic
 
 function DailyReportCtrl($routeParams, $scope, $window) {
-	$scope.MonthSelect = "";
+	
 	$scope.emp = "";
+	$scope.showAllEmployees = false;
 	$scope.invoiceDetailShow = function (invoice){
 		$scope.showInvoice=invoice;
 	}
@@ -115,11 +116,15 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	$scope.checkEquipment = function(category){
 		return category.search('Equipment');
 	}
+	$scope.changeishidden = function(user){
+		actProxy.setEmployeeHidden(user);
+	}
 	var scope = this;
 
 	scope.userList =[];
 	for(var store in $window.userQuery){
 		for(var emp in $window.userQuery[store]){
+			
 			scope.userList[scope.userList.length] = {};
 			scope.userList[scope.userList.length-1] = $window.userQuery[store][emp];
 			scope.userList[scope.userList.length-1]['TOTALNEW']=0;
@@ -131,24 +136,33 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 		scope.userList[scope.userList.length-1]['ACCESSORYCOUNT']=0;
 	 		scope.userList[scope.userList.length-1]['XLPLAN']=0;
 	 		scope.userList[scope.userList.length-1]['INSURANCEPROFIT']=0;
+	 		
 		}
 	}
 	
 	$scope.userStuff =  $window.userStuff;
+	
 		//console.log($scope.userStuff);
-		scope.salesList =  $window.salesQuery;
-	
+		scope.salesList = $window.storeList;
 		
-			
+	$scope.yearSelection="2016";
+	$scope.monthSelection="";
+	$scope.monthslist = ['1','2','3','4','5','6',
+    			  '7','8','9','10','11','12'];
+	//var today = new Date($scope.yearSelection,$scope.monthSelection);	
 	
-	var today = new Date();
 	
-	var lastofmonth = new Date("2016",today.getMonth()+1,"00");
-	var lastoflastmonth = new Date("2016",today.getMonth(),"00");
+	
+	$scope.getSalesForMonth = function(month){
+		var monthCorrected = month - 1;
+	var today = new Date($scope.yearSelection,month-1);
+	
+	var lastofmonth = new Date($scope.yearSelection,today.getMonth()+1,"00");
+	//var lastoflastmonth = new Date($scope.yearSelection,today.getMonth(),"00");
 	$scope.trendingValue = lastofmonth.getDate()/today.getDate();
 	lastofmonthday = lastofmonth.getDate();
 
-	lastoflastmonthday = lastoflastmonth.getDate();
+	//lastoflastmonthday = lastoflastmonth.getDate();
 	
 	 $scope.monthsx = ['Jan','Feb','Mar','Apr','May','Jun',
     			  		'Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -188,7 +202,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 	scope.salesList[stores]['FINANCED']=0;
 	 	scope.salesList[stores]['numINVOICES']=0;
 	 	scope.salesList[stores]['dates'] = {};
-	 	scope.salesList[stores]['dates'][(today.getMonth()-1)] ={};
+	 	//scope.salesList[stores]['dates'][(today.getMonth()-1)] ={};
 	 	scope.salesList[stores]['dates'][today.getMonth()]={};
 	
 	 	
@@ -198,13 +212,13 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 	scope.salesList[stores]['dates'][today.getMonth()]['TOTALCASH']=0;
 	 	scope.salesList[stores]['dates'][today.getMonth()]['CARDS']=0;
 	 	scope.salesList[stores]['dates'][today.getMonth()]['FINANCED']=0;
-	 	scope.salesList[stores]['dates'][today.getMonth()-1]['CASH']=0;
-	 	scope.salesList[stores]['dates'][today.getMonth()-1]['DATASCAPE']=0;
-	 	scope.salesList[stores]['dates'][today.getMonth()-1]['TOTALCASH']=0;
-	 	scope.salesList[stores]['dates'][today.getMonth()-1]['CARDS']=0;
-	 	scope.salesList[stores]['dates'][today.getMonth()-1]['FINANCED']=0;
+	 	//scope.salesList[stores]['dates'][today.getMonth()-1]['CASH']=0;
+	 	//scope.salesList[stores]['dates'][today.getMonth()-1]['DATASCAPE']=0;
+	 	//scope.salesList[stores]['dates'][today.getMonth()-1]['TOTALCASH']=0;
+	 	//scope.salesList[stores]['dates'][today.getMonth()-1]['CARDS']=0;
+	 	//scope.salesList[stores]['dates'][today.getMonth()-1]['FINANCED']=0;
 	 	var m2d = scope.salesList[stores]['dates'][today.getMonth()];
-	 	var lastm2d = scope.salesList[stores]['dates'][today.getMonth()-1];
+	 	//var lastm2d = scope.salesList[stores]['dates'][today.getMonth()-1];
 	    
     			  /*
      	for(var i=1;i<=today.getDate();i++){
@@ -215,19 +229,20 @@ function DailyReportCtrl($routeParams, $scope, $window) {
      	*/
      	
      	for(var i=1;i<=lastofmonthday;i++){
-     		var date = lastofmonth.getFullYear()+""+lastofmonth.getMonth()+""+i;
-     		var stringdate = months[lastofmonth.getMonth()] +" "+i;
+     		var date = today.getFullYear()+""+today.getMonth()+""+i;
+     		var stringdate = months[today.getMonth()] +" "+i;
      		
-     		scope.salesList[stores]['dates'][lastofmonth.getMonth()][date] = {Name:stringdate,TOTALCASH:0,CASH:0,DATASCAPE:0,FINANCED:0,CARDS:0,TRADEIN:0,INVOICES:{},SHOWINVOICES:0,SHOWTHISINVOICE:0};
+     		scope.salesList[stores]['dates'][today.getMonth()][date] = {Name:stringdate,TOTALCASH:0,CASH:0,DATASCAPE:0,FINANCED:0,CARDS:0,TRADEIN:0,INVOICES:{},SHOWINVOICES:0,SHOWTHISINVOICE:0};
      		}
   		
-     	for(var i=1;i<=lastoflastmonthday;i++){
+     	/*for(var i=1;i<=lastoflastmonthday;i++){
      		var date = lastoflastmonth.getFullYear()+""+lastoflastmonth.getMonth()+""+i;
      		var stringdate = months[lastoflastmonth.getMonth()] +" "+i;
      		
      		scope.salesList[stores]['dates'][lastoflastmonth.getMonth()][date] = {Name:stringdate,TOTALCASH:0,CASH:0,DATASCAPE:0,FINANCED:0,CARDS:0,TRADEIN:0,INVOICES:{},SHOWINVOICES:0,SHOWTHISINVOICE:0};
      		
      		}
+     		*/
    // console.log(scope.salesList);
      	
 	 for(var sales in scope.salesList[stores]['sales']){
@@ -276,7 +291,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 	}
 	 	
 	 	var year = date.getFullYear();
-	 	
+	 	console.log(month);
 	 	var day = date.getDate();
 	 	var datelisting =""+year+month+day;
 	 	var financed = thisSale['FINANCED'];
@@ -311,6 +326,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 		thisGrossProfit = thisProduct['GROSSPROFIT'];
 	 		thisCategory = thisProduct['CATEGORY'];
 	 		thisRefund = thisProduct['REFUND'];
+	 		
 	 		var lengthOfActs = scope.salesList[stores]['Activations'][thisSale['salesid']]['ACTS'].length;
 	 		var thisIsAnActivation = false;
 	 		//CLVZNS000421 BLOCK THIS! OSCHNR000029 edge buy outs
@@ -319,6 +335,7 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 		}
 	 		else{
 	 			if(today.getMonth()==month){
+	 				
 	 				if(thisProduct['PRODUCTSKU']=='CLVERB000006'||
 	 				thisProduct['PRODUCTSKU']=='CLVZRB000284'||
 	 				thisProduct['PRODUCTSKU']=='CLVZRB000388'||
@@ -564,7 +581,9 @@ function DailyReportCtrl($routeParams, $scope, $window) {
 	 }		
 	$scope.users = scope.userList;
 	 $scope.salesx = scope.salesList;
-	//console.log($scope.users);
+	 
+	console.log(scope.salesList);
+	}
      	/*
      	this[dummy] = {};
      	

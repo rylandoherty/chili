@@ -11,10 +11,14 @@ commctrl.$inject = ['$routeParams','$scope','$window',];
 // Now create our controller function with all necessary logic
 
 function commctrl($routeParams, $scope, $window) {
+	
 	$scope.MonthSelect = "";
 	$scope.Storez = "";
 	$scope.Selection = "";
-	
+	$scope.yearSelection="2016";
+	$scope.monthSelection="";
+	$scope.monthslist = ['1','2','3','4','5','6',
+    			  '7','8','9','10','11','12'];
 
 	
 $scope.checkNames = function (name1,name2){
@@ -111,11 +115,18 @@ $scope.checkNames = function (name1,name2){
 
 //START SCRIPT
 //START SCRIPT
+
+	$scope.CheckComm = function (monthIn){
+		
+
 	var userList =[];
 	
 	$scope.userStuff =  $window.userStuff;
-	var salesList =  $window.salesQuery;
-	var commList =  $window.commList;
+	var salesList =  $window.storeList;
+	var commList =  commProxy.getComms();
+	$scope.commissions = commProxy.getComms();
+	console.log(commList);
+	console.log(salesList);
 	$scope.monthsx = ['Jan','Feb','Mar','Apr','May','Jun',
     			  		'Jul','Aug','Sep','Oct','Nov','Dec'];
     			  		
@@ -161,7 +172,7 @@ $scope.checkNames = function (name1,name2){
 	 	var date = $scope.convertDate(thisSale['DATE']);
 	 	var month =date.getMonth();
 	 	
-	 	if(month=='3'){
+	 	if(month==monthIn){
 	 		
 	 	
 	 		
@@ -193,10 +204,7 @@ $scope.checkNames = function (name1,name2){
 			salesList[stores]['AprilCommReport']['Counts']['CommExpected']+=thisSale['FINANCED'];
 			salesList[stores]['AprilCommReport']['Counts']['RebateExpected']+=thisSale['COMM'];
 			
-	 	
-	 	
 	 	var year = date.getFullYear();
-	 	
 	 	var day = date.getDate();
 	 	var datelisting =""+year+month+day;
 	 	var thisHadToDoWithCommission = false;
@@ -371,7 +379,7 @@ $scope.checkNames = function (name1,name2){
 	 	if(thisIsARefund||thisIsAnActivation||thisIsInsurance){
 	 		thisHadToDoWithCommission = true;
 	 		}
-			} bn 
+			} 
 	 		
 	 	
 	 		
@@ -468,6 +476,7 @@ $scope.checkNames = function (name1,name2){
   	
   	console.log(salesList);
 	 $scope.salescomm = salesList;
+	 }
 	 }
 	 				/*
 	 				CLVZRB000068 Advanced Device Spiff

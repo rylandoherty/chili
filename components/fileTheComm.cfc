@@ -14,7 +14,22 @@
 		}
 		
 		
-		public any function saveComm(newFile,upgFile,insFile,cbFile,deactFile){
+		public any function saveComm(newFile,upgFile,insFile,cbFile,deactFile,fileName){
+			
+			var storeQuery = entityLoad( "store");
+			var storeName = "";
+			var monthToCategorizeCommInto = "";		    				
+	    				for(var stores in StoreQuery){
+	    					if(fileName contains stores.getstoreid()){
+	    						storeName = stores.getstoreid();
+	    					}
+	    				}
+						for(var i=1;i<=12;i++){
+							if(fileName contains i){
+								monthToCategorizeCommInto = i;
+							}
+						}
+			
 			
 			private any function changeMOBIL(number){
 				
@@ -76,27 +91,25 @@
 			    				HARD CODED LOCATION CODES!!!!!!!!!!
 			    				HARD CODED LOCATION CODES!!!!!!!!!!
 			    				*/
-			 var locationlist = [[126971,"E Bridgewater MA"],[95192,"Wilmington MA"],[127565,"Hopkinton MA"],[118548,"Franklin MA"],[127698,"Halifax MA"]];
+			 
 			 for(var acts in newFile){
-			 	if(acts['ACCESS']!='ACCESS'&&len(acts['ACCESS'])){
+			 	if(acts['Agent ID']!='Agent ID'&&len(acts['Agent ID'])){
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		 addComm.setTYPE("NEW");
-				 		 addComm.setMOBILEID(changeMOBIL(acts['MOBILE ID']));
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Mobile ID']));
+				 		 addComm.setDeviceID(acts['Device ID']);
 				 		 addComm.setCUSTOMERNAME(acts['Customer Name']);
 				 		
-				 		 addComm.setDATE(changeNEWdate(acts['Date']));
-				 		 for(var locs in locationlist){
-				 		 	if(locs[1]==acts['LOCATION']){
-				 		 		addComm.setLOCATION(locs[2]);
-				 		 	}
-				 		 }
+				 		 addComm.setDATE(changeNEWdate(acts['Activation Date']));
+				 		 addComm.setLOCATION(storeName);
+				 		 addComm.setmonthGroup(monthToCategorizeCommInto);
 				 		 
 				 		// addComm.setMODEL(acts['  Model']);
-				 		 addComm.setRECEIVABLE(moneyReplace(acts['RECEIVABLE']));
-				 		 addComm.setADC(moneyReplace(acts['ADC 95%']));
-				 		 addComm.setCMSN(moneyReplace(acts['CMSN 95%']));
-				 		 addComm.setSPIFF(moneyReplace(acts['SPIFF 95%']));
+				 		 addComm.setRECEIVABLE(moneyReplace(acts['Purchased Receivable']));
+				 		 addComm.setADC(moneyReplace(acts['ACD']));
+				 		 addComm.setCMSN(moneyReplace(acts['Commission Amount']));
+				 		 addComm.setSPIFF(moneyReplace(acts['SPIFF Amount']));
 				 		 EntitySave(addComm);
 				 		 
 				 	}catch(Exception ex) {
@@ -105,25 +118,23 @@
 				 	}
 			 }
 			 for(var acts in upgFile){
-			 	if(acts['ACCESS']!='ACCESS'&&len(acts['ACCESS'])){
+			 	if(acts['Agent ID']!='Agent ID'&&len(acts['Agent ID'])){
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		addComm.setTYPE("UPG");
-				 		 addComm.setMOBILEID(changeMOBIL(acts['MOBIL']));
-				 		 addComm.setALTMOBIL(changeMOBIL(acts['ALT MOBIL']));
-				 		 addComm.setCUSTOMERNAME(acts['CUSTOMER NAME']);
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Original Mobile ID']));
+				 		 addComm.setDeviceID(acts['Device ID']);
+				 		 addComm.setALTMOBIL(changeMOBIL(acts['Mobile ID']));
+				 		 addComm.setCUSTOMERNAME(acts['Customer Name']);
 				 		 
-				 		 addComm.setDATE(changeUPGdate(acts['DATE']));
-				 		  for(var locs in locationlist){
-				 		 	if(locs[1]==acts['LOCATION']){
-				 		 		addComm.setLOCATION(locs[2]);
-				 		 	}
-				 		 }
+				 		 addComm.setDATE(changeNEWdate(acts['Device Change Date']));
+				 		   addComm.setLOCATION(storeName);
+				 		 addComm.setmonthGroup(monthToCategorizeCommInto);
 				 		 //addComm.setMODEL(acts['MODEL']);
-				 		 addComm.setRECEIVABLE(moneyReplace(acts['RECEIVABLE']));
-				 		 addComm.setADC(moneyReplace(acts['ADC 95%']));
-				 		 addComm.setCMSN(moneyReplace(acts['COMN 95%']));
-				 		 addComm.setSPIFF(moneyReplace(acts['SPIFF 95%']));
+				 		 addComm.setRECEIVABLE(moneyReplace(acts['Purchased Receivable']));
+				 		 addComm.setADC(moneyReplace(acts['Additional Commission Amount']));
+				 		 addComm.setCMSN(moneyReplace(acts['Commission Amount']));
+				 		 addComm.setSPIFF(moneyReplace(acts['SPIFF Amount']));
 				 		 EntitySave(addComm);
 				 		 
 				 	}catch(Exception ex) {
@@ -132,18 +143,16 @@
 				 	}
 			 }
 			 for(var acts in insFile){
-			 	if(acts['Location']!='Location'&&len(acts['Location'])){
+			 	if(acts['Agent ID']!='Agent ID'&&len(acts['Agent ID'])){
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		addComm.setTYPE("INS");
-				 		 addComm.setMOBILEID(changeMOBIL(acts['MOBILE ID']));
-				 		 for(var locs in locationlist){
-				 		 	if(locs[1]==acts['LOCATION']){
-				 		 		addComm.setLOCATION(locs[2]);
-				 		 	}
-				 		 }
-				 		 addComm.setNOTES(acts['NOTES']);
-				 		 addComm.setCMSN(moneyReplace(acts['COMMISSIONS']));
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Mobile ID']));
+				 		 addComm.setDeviceID(acts['Device ID']);
+				 		  addComm.setLOCATION(storeName);
+				 		 addComm.setmonthGroup(monthToCategorizeCommInto);
+				 		 addComm.setNOTES(acts['Notes']);
+				 		 addComm.setCMSN(moneyReplace(acts['Adj Amount']));
 				 		 
 				 		 EntitySave(addComm);
 				 		 
@@ -152,48 +161,46 @@
 							} 
 				 	}
 			 }
-			 /*for(var acts in cbFile){
-			 	if(acts['Location']!='Location'&&len(acts['Location'])){
+			 for(var acts in cbFile){
+			 	if(acts['Agent ID']!='Agent ID'&&len(acts['Agent ID'])){
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		addComm.setTYPE("CB");
-				 		 addComm.setMOBILEID(changeMOBIL(acts['Mobile ID']));
-				 		 for(var locs in locationlist){
-				 		 	if(locs[1]==acts['Location']){
-				 		 		addComm.setLOCATION(locs[2]);
-				 		 	}
-				 		 }
-				 		 addComm.setCUSTOMERNAME(acts['Name']);
-				 		 addComm.setSTARTDATE(changeNEWdate(acts['Master Svc. Date']));
-				 		 
-				 		 addComm.setRECEIVABLE(moneyReplace(acts['Receivable']));
-				 		 addComm.setADC(moneyReplace(acts['ADC']));
-				 		 addComm.setCMSN(moneyReplace(acts['Charge Back']));
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Original Mobile ID']));
+				 		 addComm.setLOCATION(storeName);
+				 		 addComm.setmonthGroup(monthToCategorizeCommInto);
+				 		 addComm.setCUSTOMERNAME(acts['Customer Name']);
+				 		 addComm.setSTARTDATE(changeNEWdate(acts['Activation Date']));
+				 		 addComm.setENDDATE(changeNEWdate(acts['Deactivation Date']));
+				 		 addComm.setDeviceID(acts['Device ID']);
+				 		 addComm.setRECEIVABLE(moneyReplace(acts['Purchased Receivable']));
+				 		 addComm.setADC(moneyReplace(acts['Additional Commission Amount']));
+				 		 addComm.setCMSN(moneyReplace(acts['Chargeback Amount']));
+				 		 addComm.setSPIFF(moneyReplace(acts['SPIFF Amount']));
 				 		 EntitySave(addComm);
 				 		 
 				 	}catch(Exception ex) {
 			    				WriteOutput("<p>#ex.message#</p>"); 
 							} 
 				 	}
-			 }*/
-			 /*for(var acts in deactFile){
-			 	if(acts['Location']!='Location'&&len(acts['Location'])){
+			 }
+			 for(var acts in deactFile){
+			 	if(acts['Agent ID']!='Agent ID'&&len(acts['Agent ID'])){
 				 	try {
 				 		var addComm = entityNew('comms');
 				 		addComm.setTYPE("DEACT");
-				 		addComm.setCUSTOMERNAME(acts['Name']);
-				 		 addComm.setMOBILEID(changeMOBIL(acts['Mobile ID']));
+				 		addComm.setCUSTOMERNAME(acts['Customer Name']);
+				 		 addComm.setDeviceID(acts['Device ID']);
+				 		 addComm.setMOBILEID(changeMOBIL(acts['Original Mobile ID']));
 				 		 //addComm.setDATE(changeUPGdate(acts['Begin Date']));
-				 		 for(var locs in locationlist){
-				 		 	if(locs[1]==acts['Location']){
-				 		 		addComm.setLOCATION(locs[2]);
-				 		 	}
-				 		 }
-				 		 addComm.setSTARTDATE(changeNEWdate(acts['Master Svc. Date']));
-				 		 
-				 		 addComm.setRECEIVABLE(moneyReplace(acts['Receivable']));
-				 		 addComm.setADC(moneyReplace(acts['ADC']));
-				 		 addComm.setCMSN(moneyReplace(acts['Charge Back Amt']));
+				 		  addComm.setLOCATION(storeName);
+				 		 addComm.setmonthGroup(monthToCategorizeCommInto);
+				 		 addComm.setSTARTDATE(changeNEWdate(acts[' Contract Begin Date']));
+				 		  addComm.setENDDATE(changeNEWdate(acts['Deactivation Date']));
+				 		 addComm.setRECEIVABLE(moneyReplace(acts['Purchased Receivable']));
+				 		 addComm.setADC(moneyReplace(acts['Add Comm Amt']));
+				 		 addComm.setCMSN(moneyReplace(acts['Commission Amount']));
+				 		 addComm.setSPIFF(moneyReplace(acts['SPIFF Amount']));
 				 		 EntitySave(addComm);
 				 		
 				 		 
@@ -201,7 +208,7 @@
 			    				WriteOutput("<p>#ex.message#</p>"); 
 							} 
 				 	}
-			 }*/
+			 }
 			 
     	
     				

@@ -387,13 +387,37 @@
 				  uploadStuff.settime(Now());
 				  uploadStuff.setfilename(filename);
 				  entitySave(uploadStuff);
-				 var oldStock = EntityLoad('receivedInvoice');
-				for(var i = 1;i<=arrayLen(oldStock);i++){
-					entityDelete(oldStock[i]);
-				}
+				 
 				ormFlush();
 				ormreload();
-				for(var item in ReceivingInvoiceData){
+				
+					/*
+					for(var crap in item){
+						var toLoad = true;
+						var existingList = entityLoad('vendorMapping');
+						for(var existing in existingList){
+							if(existing.getvendorMappingid()==replace(crap," ","")){
+								toLoad=false;
+							}
+							
+						
+						}
+						if(toLoad){
+						writedump(replace(crap," ",""));
+						try { 
+								
+						    var vendorList = EntityNew('vendorMapping');
+						    vendorList.setvendorMappingid(toString(replace(crap," ","")));
+						    EntitySave(vendorList); 
+							ormflush();
+							
+							}catch(Exception ex) { 
+								    WriteOutput("<p>#ex.message#</p>"); 
+							} 
+	}
+		}	
+		*/		
+		for(var item in ReceivingInvoiceData){
 									var found= false;
     			if(item['Date']!='Date'&&len(item['Date'])){
 	    			
@@ -424,11 +448,8 @@
 	    					}*/
 	    					found=false;
 	    							var product = EntityNew('receivedInvoice');
-								   
-								    
-								    product.setreceivedInvoiceid(item['INVOICE ##']);  
-								   
-								    product.setDate(item['Date']);  
+								    product.setreceivedInvoiceid(toString(item['INVOICE ##']));  
+								   product.setDate(item['Date']);  
 								    product.setPAYMENTS(item['PAYMENTS']); 
 								    product.setStoreTransfer(item['Store Transfer']); 
 								    product.setVERIZONAMOUNT(item['VERIZON AMOUNT']);  
@@ -438,9 +459,6 @@
 								    product.setIceMobility(item['Ice Mobility']); 
 								    product.setMisc(item['Misc']); 
 								    product.setfilename(filename); 
-								    
-								    
-								    
 								    EntitySave(product); 
 								    
 								    storeQuery.addreceivedInvoice(product);
@@ -774,56 +792,7 @@
 								    ormflush(); 
 	    						}}
     						} */
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+	
 			/*scope.salesDatabase= {};	
 			scope.salesSettled = {};
 			scope.salesOver = {};			

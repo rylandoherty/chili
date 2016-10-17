@@ -27,7 +27,6 @@
   		<tr>
   		<td>Phone</td>
   		<td>Order</td>
-  		
   		<td>Cost</td>		
   		<td>Desired Count</td>		
   		<td>Current Stock</td>
@@ -36,7 +35,7 @@
   		<tr ng-repeat="abc in productList" ng-if="abc[storeSelection].order>0" ng-init="">
   			`
   			<td><div>{{abc.name}}</div></td>
-  			<td> <input style="width:75px" ng-model="abc[storeSelection].trueorder" ng-change="changeOrder(abc,storeSelection, abc[storeSelection].trueorder)"  type="text" maxlength="8"
+  			<td> <input style="width:75px" ng-model="abc[storeSelection].trueorder" ng-change="changeOrder(abc,storeSelection, abc[storeSelection].trueorder)"  type="number" maxlength="2"
     width=5 value="{{abc[storeSelection].trueorder}}" ></input> </td>
   			
   			<td><div>{{abc[storeSelection].ordercost}}</div></td>
@@ -66,7 +65,7 @@
   	<td  ng-style=" { 'background-color': x['color']}"> {{ x['name']}}</td>
     <td><input ng-model="x['hidden']" ng-change="changeHidden(x.RQSKU)" type="checkbox" value="{{ x['hidden']}}"></td>
     <td> {{x[storeSelection].inventory}} </td>
-    <td> <input style="width:75px" ng-model="x[storeSelection].settings" ng-change="changeDesired(x.RQSKU, storeSelection , x[storeSelection].settings)"  type="text" maxlength="8"
+    <td> <input style="width:75px" ng-model="x[storeSelection].settings" ng-change="changeDesired(x.RQSKU, storeSelection , x[storeSelection].settings)"  type="number" maxlength="2"
     width=5 value="{{x[storeSelection].settings}}" ></input> </td>
    
     <td style="width:75px"><input style="width:75px" ng-model="x.cost" ng-change="changeCost(x.RQSKU ,storeSelection, x.cost)"  type="text" maxlength="8"

@@ -10,9 +10,11 @@
  	
  <input type="checkbox" ng-model="showChecked" > SHOW CHECKED </input>
   	<p>
-  		{{showChecked}}
-  		<input type="button"  ng-click="MonthSelect='3'">Apr</input>
-  		<input type="button"  ng-click="MonthSelect='4'">May</input>
+  		{{showChecked}}{{MonthSelect}}{{today.getMonth()}}
+  		<select ng-model="monthSelection" ng-change="getSalesForMonth(monthSelection)">
+  			<option ng-repeat="month in monthslist" value="{{month}}" >{{month}}</option>
+  		</select>
+ 	
   	<div ng-repeat="store in salesx" ng-if="store['district']=='District Sanat'&&(userStuff.level<2||userStuff.location==store.storeid)" >
   	{{store['storeid']}}
   		<input type="checkbox" ng-model="store[checked]" >

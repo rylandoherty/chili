@@ -1,5 +1,27 @@
 <cfcomponent>
 <cfscript>
+			
+			remote any function setEmployeeHidden(user){
+				try { 
+					
+			   
+			    var person = entityLoad( "User", user , true );
+			   if(!isDefined(person.getisHidden())){
+			   	person.setisHidden("true");
+			   } 
+			   else{
+			    if(person.getisHidden()){
+			    	person.setisHidden(false);
+			    }else{
+			    	person.setisHidden(true);
+			    }
+			    }
+			     EntitySave(person); 
+			    ormflush(); 
+			   } catch(Exception ex) { 
+			    WriteOutput("<p>#ex.message#</p>"); 
+			} 
+	}
 			remote any function setContractNumber(saleid , contractnumber ){
 				try { 
 					
@@ -24,6 +46,7 @@
 			    WriteOutput("<p>#ex.message#</p>"); 
 			} 
 	}
+	
 	remote any function setPassword(invoice , number ){
 				try { 
 					

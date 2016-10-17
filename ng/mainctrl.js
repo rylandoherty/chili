@@ -31,10 +31,10 @@ function Ctrl2($scope, sharedProperties) {
  $scope.passUserData = function () {
  	
  	 var userid = $window.document.getElementById('userid');
- 	  var userid = "rylan.doherty";
+ 	   userid = "rylan.doherty";
 	//console.log(userid.value);
 	 var pass = $window.document.getElementById('psw');
-	 var pass = "fvCD13qw";
+	  pass = "fvCD13qw";
 	//console.log(pass.value);
 	  $scope.$parent['loggedIn']= false;
 	$window.userStuff = f.validateAndReturnUser(userid.value,pass.value);
@@ -46,15 +46,19 @@ function Ctrl2($scope, sharedProperties) {
 		
 	$window.userTag =userid.value;
 	storeStuff = e.loadStoreStuff();
-	console.log(storeStuff.storeList);
-	$window.receivedList = $window.storeStuff.receivedList;
-	$window.rmaList = $window.storeStuff.rmaList;
-	$window.transfers = $window.storeStuff.transfersList;
-	$window.theProductList = $window.storeStuff.productList;
-	$window.salesQuery = $window.storeStuff.storeList;
-	$window.uploadRecord = $window.storeStuff.uploadRecord;
-	$window.receivedInvoice = $window.storeStuff.receivedList; 
-	console.log($window.storeStuff);
+	//$window.commList = storeStuff.COMMS;
+	$window.receivedList = storeStuff.RECEIVEDLIST;
+	$window.rmaList = storeStuff.RMALIST;
+	$window.transfers = storeStuff.TRANSFERSLIST;
+	$window.theProductList = storeStuff.PRODUCTLIST;
+	$window.storeList = storeStuff.STORELIST;
+	$window.uploadRecord = storeStuff.UPLOADRECORD;
+	$window.receivedInvoiceList = storeStuff.RECEIVEDINVOICELIST; 
+	$window.userList = storeStuff.USERLIST;
+	$window.userQuery = storeStuff.USERLIST;
+	console.log(storeStuff);
+	
+	
 	}
 	
 	

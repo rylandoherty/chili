@@ -13,7 +13,7 @@ InventoryCtrl.$inject = ['$routeParams','$scope','$window'];
 function InventoryCtrl($routeParams, $scope, $window) {
 		
  		$scope.productList =  $window.theProductList;
- 		$scope.storeArray = $window.salesQuery;
+ 		$scope.storeArray = $window.storeList ;
  		$scope.apple = "clvzap";
  		
 	$scope.setTyper = function (text){

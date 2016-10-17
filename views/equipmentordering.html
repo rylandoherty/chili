@@ -1,0 +1,117 @@
+<body>
+<!---Order Cycle <input type="number" ng-model="cycledate" ng-change="findDateList()" ><br>
+Starting: <input list="OrderOptionMonth" ng-model="orderoptionmonth" ng-change="setMonthSelection(orderoptionmonth)"><br>
+<datalist id="OrderOptionMonth">
+	  <option value="This Month">
+	  <option value="Prev Month">
+</datalist>--->
+<li ng-if="level<=2"><a  href="/OrderCycle">Order Cycle</a></li>
+
+<select ng-model="fileSelection" ng-change="getDateRangeFromReceivedInvoices()">
+  <option ng-repeat="uploads in listUniqueUploads" value="{{uploads}}" >{{uploads}}</option>
+  
+</select>
+
+{{storeSelection}}<br>
+<div float="left">
+<button ng-repeat="focus in storeArray" ng-if="focus.district == 'District Sanat'&&(userThing.level<2||userThing.location==focus.storeid)" ng-click="setstoreSelection(focus.storeid);getFileList()"  >
+  			<div>{{focus.storeid}}</div>
+  		</button>
+  		<button ng-click="setRQSelection('Received');">Received</button>
+  		<button ng-click="setRQSelection('RMA');">RMA</button>
+  		<button ng-click="setRQSelection('TransfersIn');">Transfers In</button>
+  		<button ng-click="setRQSelection('Purchase');">Purchase </button>
+  		</div>
+  		<div class ="container">
+  			
+  		
+<table  >
+	<tr>
+		<th> Date </th>
+	    <th> Invoice Total</th>
+		<th> Received Total</th>
+	</tr>
+	
+	<tr ng-repeat="bacon in superObj">
+		<td> {{bacon.date | date:"MM/dd/yyyy"}} </td>
+		    <td><table >
+		    	<tr ng-repeat="sales in bacon.purchased">
+		    	<td>{{sales.receivedInvoiceid}} </td>	
+		    	<td>{{sales.vendor}} </td>	
+		    	<td>{{sales.amount}} </td>	
+		    	</tr>
+		    </table></td>
+			<td> 0</td>
+		
+	</tr>
+	
+	</table>
+	
+	<table ng-if="rqSelection == 'RMA'">
+	<tr>
+		<th> Vendor </th>
+		<th> Committed</th>
+		<th> TotalCost </th>
+		<th> storename </th>
+		<th> VendorRMA </th>
+		<th> Completed</th>
+	    
+	</tr>
+	
+	<tr ng-repeat="lol in rmaList">
+		<td>{{lol.Vendor}}</td>
+		<td>{{lol.CommittedOn}}</td>
+		<td>{{lol.TotalCost}}</td>
+		<td>{{lol.storename}}</td>
+		<td>{{lol.VendorRMA}}</td>
+		<td>{{lol.Completed}}</td>
+		
+	</tr>
+	
+	</table>
+	
+	<table ng-if="rqSelection == 'Received'">
+	<tr>
+		<th> Vendor </th>
+		<th> TotalInvoice </th>
+		<th> ReceivedAt </th>
+		<th> VendorInvoice </th>
+		<th> Reference </th>
+	    
+	</tr>
+	
+	<tr ng-repeat="lol in receivedList">
+		<td>{{lol.Vendor}}</td>
+		<td>{{lol.TotalInvoice}}</td>
+		<td>{{lol.ReceivedAt}}</td>
+		<td>{{lol.VendorInvoice}}</td>
+		<td>{{lol.Reference}}</td>
+		
+	</tr>
+	
+	</table>
+
+</div>
+  		
+  	
+  	<style>
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+.container > * {
+    float: left;
+    margin:15px;
+    
+}
+</style>
+  	</body>
+  	
+  

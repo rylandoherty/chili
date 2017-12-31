@@ -1,5 +1,5 @@
 <html >
-	
+
 
 <title>
 	Green Chili
@@ -9,8 +9,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
- 
-  
+	<button ng-click="refreshMTD()">REFRESH MTD</button>
+
   <script>
   $( function() {
     $( "#datepickerstart" ).datepicker();
@@ -18,6 +18,7 @@
   $( function() {
 	    $( "#datepickerend" ).datepicker();
 	  } );
+
 	  var datetoday = new Date();
 	   var thisMonthFormatted = datetoday.getMonth()+1;
 		  if(thisMonthFormatted.length=1){
@@ -25,27 +26,27 @@
 		  }
 		  var thisDateFormatted = datetoday.getDate();
 		  console.log(thisDateFormatted.toString().length);
-		  
+
 		  if(thisDateFormatted.toString().length==1){
 			  thisDateFormatted = "0"+thisDateFormatted;
 		  }
-		 
+
 		  $('#datepickerstart').val(datetoday.getFullYear()+thisMonthFormatted+""+thisDateFormatted);
-		 
+
    </script>
 </head>
 <body>
- 
+  <p id="counter"></p>
 <p>Date <input type="text" id="datepickerstart" onchange=""></p>
 <!---<p>End Date: <input type="text" id="datepickerend" onchange="checkDates()"></p>--->
- 
+
 </body>
 </html>
 <div ng-app="fileUpload" ng-controller="MyCtrl">
      Drop File:
-    <div ngf-drop ngf-select ng-model="files" class="drop-box" 
+    <div ngf-drop ngf-select ng-model="files" class="drop-box"
         ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
-        accept=".xls" 
+        accept=".xls"
         ngf-pattern="'.xls'">Drop pdfs or images here or click to upload</div>
     <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
     Files:
@@ -56,14 +57,14 @@
     <pre>{{log}}</pre>
 </div>
 
-	
- 
-
-	
 
 
 
-				
+
+
+
+
+
 	<style>
 	.button {
     -moz-appearance: button;

@@ -1,8 +1,54 @@
 //inject angular file upload directives and services.
 var app = angular.module('fileUpload', ['ngFileUpload']);
 
-app.controller('MyCtrl', ['$scope', 'Upload', '$timeout', function ($scope, Upload, $timeout) {
-   try{
+app.controller('MyCtrl', ['$scope', 'Upload', '$timeout','$window', function ($scope, Upload, $timeout, $window) {
+   
+	$scope.setsalescontainers = function (typething){
+		 var stupid = {};
+		    
+			 
+			 
+			 var districtname = "";
+			 
+				var storename = "";
+				var username = "";
+				var saletoadd = "";
+				var district = $window.district;
+				saveContainer.deleteEntry(typething);	
+				districtname = getSalesContainer2(typething,0,0);
+				districtname = districtname[district];
+				//console.log(districtname);
+				console.log(districtname);
+					for(var stores in districtname['stores']){
+						storename = districtname['stores'][stores];
+						
+						for(var  emps in storename['employees']){
+							username = storename['employees'][emps];
+							
+							for(var sale in username['sales']){
+								saletoadd = username['sales'][sale];
+								
+								saveContainer.fcontainer(typething , districtname.name, storename.name, username.name,saletoadd.name,saletoadd.QTY,saletoadd.GP);	
+							}
+						}
+					}
+		
+		
+	}
+	
+	$scope.refreshMTD= function (){
+		$scope.setsalescontainers("LastMonth");
+		$scope.setsalescontainers("MTD");
+		$scope.setsalescontainers("lastweek");
+		$scope.setsalescontainers("Yesterday");
+		$scope.setsalescontainers("Today");
+		
+		
+		
+
+	}
+	
+	try{
     $scope.$watch('files', function () {
     	
     	

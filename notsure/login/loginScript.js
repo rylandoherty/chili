@@ -21,7 +21,7 @@ function LoginCtrl($routeParams, $scope, $window,$location, userData, $rootScope
 	
 	$window.sales = {};
 	$scope.load = "";
-	$scope.uploadContainer = {};
+		$scope.uploadContainer = {};
 	$scope.uploadThing = loadProxy.getUploads();
 	$scope.uploadtypes = ['hours','pdr','salesbyinvoice','schedule','clockhours'];
 $scope.findTopUploads = function(){
@@ -52,6 +52,9 @@ $scope.getDateFromSql= function (time){
 		return d;
 		//2016-11-06 19:14:48'
 	}
+	
+	
+
 	$scope.passUserData = function (){
 	 
 	
@@ -86,27 +89,56 @@ $scope.getDateFromSql= function (time){
 	//console.log(lastmonthsalary);
 	//console.log(thismonthsalary);
 	
-	 var lastmonthfirstday = new Date(today.getFullYear(), today.getMonth()-2) 
+	 var lastmonthfirstday = new Date(today.getFullYear(), today.getMonth()) ;
 	 var start = lastmonthfirstday.getFullYear()+""+("0"+(lastmonthfirstday.getMonth()+1)).slice(-2)+("0"+lastmonthfirstday.getDate()).slice(-2)+"0000";
     	
     	var end = today.getFullYear()+("0"+(today.getMonth()+1)).slice(-2)+("0"+today.getDate()).slice(-2)+"0000";
     var sales;	
   $window.sales.dateSystem = {};
-    //sales = loadProxy.getsaleinvoices(start,end);
+  $window.sales.toWrite={};
+   // sales = loadProxy.getproductdetails(start,end);
+    
+    
 	$window.clocks = {};
 	
 	$window.datesStore.district=['District Sanat'];
 	
 	$window.sales.dateSystem['MTD'] = {};
+	$window.sales.toWrite['MTD'] = {};
+	$window.sales.toWrite['lastweek'] = {};
+	$window.sales.toWrite['Yesterday'] = {};
+	$window.sales.toWrite['Today'] = {};
+	$window.sales.toWrite['LastMonth'] = {};
     $window.sales.dateSystem['lastweek'] = {};
     $window.sales.dateSystem['Yesterday'] = {};
     $window.sales.dateSystem['Today'] = {};
     $window.sales.dateSystem['LastMonth'] = {};
     $window.sales.dateSystem['Calendar'] = {};
     $scope.load2="Loading";
+   
+		
+   
+   
+    console.log($window.sales.dateSystem['MTD']);
+    
+    
 $timeout(function() { 
-  
+	 $window.sales.toWrite['lastweek'] = saveContainer.loadcontainer("lastweek");
+	    $window.sales.toWrite['Yesterday'] = saveContainer.loadcontainer("Yesterday");
+	    $window.sales.toWrite['Today'] = saveContainer.loadcontainer("Today");
+	    $window.sales.toWrite['LastMonth'] = saveContainer.loadcontainer("LastMonth");
+	    $window.sales.toWrite['MTD'] = saveContainer.loadcontainer("MTD");
+						
+	 
+		
+	    $window.sales.dateSystem['MTD'] = finalizecontainer( $window.sales.toWrite['MTD']);
+	    $window.sales.dateSystem['lastweek'] = finalizecontainer( $window.sales.toWrite['lastweek']);
+	    $window.sales.dateSystem['Yesterday'] = finalizecontainer( $window.sales.toWrite['Yesterday']);
+	    $window.sales.dateSystem['Today'] = finalizecontainer( $window.sales.toWrite['Today']);
+	    $window.sales.dateSystem['LastMonth'] = finalizecontainer( $window.sales.toWrite['LastMonth']);
+	/*
     $window.sales.dateSystem['MTD']['container'] = getSalesContainer('MTD',0,0);
+   
     
    	$window.sales.dateSystem['LastMonth']['container'] = getSalesContainer('LastMonth',0,0);
    	
@@ -118,7 +150,7 @@ $timeout(function() {
 	$scope.load="Yesterday";
 	$window.sales.dateSystem['Today']['container'] = getSalesContainer('Today',0,0);
 	$scope.load="Today";
-	
+	console.log($window.sales.dateSystem);*/
 });
 
 	
@@ -146,6 +178,8 @@ $timeout(function() {
 	 
 }
 
+	
+	
  $scope.deleteCookie = function(){
 	e.removeUserCookie();
 	 var userid = window.document.getElementById('userid');

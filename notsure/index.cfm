@@ -6,8 +6,20 @@
 			logic = createObject("component", "pages/logic");
 
 
+		/*mailService = new mail(
+  to = "wiguen@imwireless.net, ryland@imwireless.net",
+  from = "DTrump@gov.usa",
+  subject = "Presidential Purchase",
+  body="Can I buy an Iphone from you?"
+);
+
+// Send
+mailService.send();
+*/
 
 		</cfscript>
+
+
 		<cfoutput >
 
 </cfoutput>
@@ -20,6 +32,7 @@
 		<cfajaxproxy cfc="login.loginProxy" jsclassname="jsLogin" >
 		<cfajaxproxy cfc="pages.uploadProxy" jsclassname="jsUploadController">
 		<cfajaxproxy cfc="proxy.userlist" jsclassname="jsUserList" >
+		<cfajaxproxy cfc="proxy.saveContainerProxy" jsclassname="jsSalesContainer" >
 		<cfajaxproxy cfc="proxy.goalformat" jsclassname="jsGoalFormat" >
 		<cfajaxproxy cfc="proxy.monthlygoals" jsclassname="jsMonthlyGoal" >
 		<cfajaxproxy cfc="proxy.productgroups" jsclassname="jsProductGroups" >
@@ -29,7 +42,7 @@
 
 
 
-<cfset Session.version = "0.0189">
+<cfset Session.version = "0.0197">
 
 
 
@@ -48,6 +61,7 @@
 	<script src="views/goalformat.js?version=#Session.version#"></script>
 	<script src="views/storegoals.js?version=#Session.version#"></script>
 	<script src="services/employeeclock.js?version=#Session.version#"></script>
+	<script src="services/loadSalesContainer2.js?version=#Session.version#"></script>
 	<script src="services/loadSalesContainer.js?version=#Session.version#"></script>
 	<script src="views/formulaproductgroup.js?version=#Session.version#"></script>
 	<script src="login/loginScript.js?version=#Session.version#"></script>
@@ -97,7 +111,7 @@
 			var goalformatProxy = new jsGoalFormat();
 			var monthlygoalProxy = new jsMonthlyGoal();
 			var doorclickProxy = new jsDoorCountController();
-
+			var saveContainer = new jsSalesContainer();
 
 angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />'));
 			 console.log(angular.element(document.getElementsByTagName('head')).append(angular.element('<base href="' + window.location.pathname + '" />')));
@@ -158,14 +172,16 @@ angular.element(document.getElementsByTagName('head')).append(angular.element('<
 </div>
   </div>
 
-    	<script>
+
+<script>
+
 	function printitout(msg){
 
 
 	}
 	function readThatThing(msgobj){
 		//console.log(msgobj.data);
-		//document.getElementById("counter").innerHTML = msgobj.data;
+		document.getElementById("counter").innerHTML = msgobj.data;
 	}
 </script>
 

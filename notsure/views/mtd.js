@@ -55,7 +55,7 @@ function mtdCtrl($routeParams, $scope, $window ) {
 	console.log($scope.simpleContainer);
 	}
 	$scope.setDate = function (){
-		$scope.container = $window.sales.dateSystem[$scope.mtdz['datetype']]['container'];
+		$scope.container = $window.sales.dateSystem[$scope.mtdz['datetype']];
 		
 		$scope.updateEmployeeArray();
 	}
@@ -95,6 +95,6 @@ function mtdCtrl($routeParams, $scope, $window ) {
     
 }
     
-$scope.container = $window.sales.dateSystem['MTD']['container'];
+$scope.container = $window.sales.dateSystem['MTD'];
 	$scope.updateEmployeeArray();
 }

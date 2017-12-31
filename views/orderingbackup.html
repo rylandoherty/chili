@@ -1,0 +1,129 @@
+<html >
+
+<div>
+ Search
+  <input ng-model="typer">
+  </input>
+    <button ng-click="setTyper('clvzap')">Apple</button>
+  <button ng-click="setTyper('clvzsa')">Samsung</button>
+  <button ng-click="setTyper('clvzvz')">Verizon</button>
+  <button ng-click="setTyper('clvzmo')">Motorola</button>
+  <button ng-click="setTyper('clvzht')">HTC</button>
+  <button ng-click="setTyper('clvzlg')">LG</button>
+  <button ng-click="setTyper('clvzky')">Kyocera</button>
+  <button ng-click="setTyper('clvznv')">Novatel</button>
+  
+    <div><table style="float:top;width:40%"></table>
+  <input type="checkbox" ng-model="showHidden"> SHOW HIDDEN </input>
+    <input type="checkbox" ng-model="showInStock"> SHOW STOCK ONLY </input>
+    <p>
+  	
+  		<button ng-repeat="focus in storeArray" ng-if="focus.district == 'District Sanat'&&(userThing.level<2||userThing.location==focus.storeid)"  ng-click="setstoreSelection(focus.storeid)"  >
+  			<div>{{focus.storeid}}</div>
+  		</button>
+  		<div>
+  			Total Stock ${{productList[storeSelection].totalinstock}}
+  		</div>
+  		<div>
+  			{{uploadFilename}}
+  		</div>
+  		<div>
+  			{{uploadTime.getFullYear()}}-{{uploadTime.getMonth()+1}}-{{uploadTime.getDate()}}-{{uploadTime.getHours()}}-{{uploadTime.getMinutes()}}
+  		</div>
+  		<div style="font-size:25">{{storeSelection}} {{ gettotalcost(storeSelection).toFixed(2) }}</div>
+  		<table>
+  		<tr>
+  		<td>Phone</td>
+  		<td>Order</td>
+  		<td>Cost</td>		
+  		<td>Desired Count</td>		
+  		<td>Current Stock</td>
+  		<td>Cost Per</td>
+  				
+  		</tr>
+  		<tr ng-repeat="abc in productList" ng-if="abc[storeSelection].order>0" ng-init="">
+  			
+  			<td><div>{{abc.name}}</div></td>
+  			<td> <input style="width:75px" ng-model="abc[storeSelection].trueorder" ng-change="changeOrder(abc,storeSelection, abc[storeSelection].trueorder)"  type="number" maxlength="2"
+    width=5 value="{{abc[storeSelection].trueorder}}" ></input> </td>
+  			
+  			<td><div>{{abc[storeSelection].ordercost}}</div></td>
+  			<td><div>{{abc[storeSelection].settings}}</div></td>
+  			<td><div>{{abc[storeSelection].inventory}}</div></td>
+  			
+  		</tr>
+  		
+  		
+  		</table>
+   </p>
+  <table id="table-1">
+  	<thead >
+  	<tr >
+  		<b>
+  	<th><b>&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; SKU&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </b></td>
+  	<th style="width:150px" ><b>Name  </b></td>
+  	<th><b>Hidden</b></td>
+  	<th><b>In<br>Stock<br></b></td>
+    <th><b>Desired<br>Count<br></b></td>	
+
+  	<th style="width:75px"><b>Low</b></td>
+  	<th style="width:75px"><b>High</b></td>
+  	<th ng-repeat="x in storeArray" ng-if="x.district == 'District Sanat'"><b>{{x.storeid}}</b></td>
+    </b>
+    </tr>
+    </thead>
+    <tbody>
+  <tr  ng-repeat="x in productList | filter:typer|orderBy:'toString()'" ng-if="(x['hidden']!=true||showHidden==true)&&(showInStock==false||x[storeSelection].inventory>0)" >
+  	<td>{{ x['RQSKU']}}</td>
+  	
+  	<td  ng-style=" { 'background-color': x['color']}"> {{ x['name']}}</td>
+    <td><input ng-model="x['hidden']" ng-change="changeHidden(x.RQSKU)" type="checkbox" value="{{ x['hidden']}}"></td>
+    <td> {{x[storeSelection].inventory}} </td>
+    <td> <input style="width:75px" ng-model="x[storeSelection].settings" ng-change="changeDesired(x.RQSKU, storeSelection , x[storeSelection].settings)"  type="number" maxlength="2"
+    width=5 value="{{x[storeSelection].settings}}" ></input> </td>
+   
+    <td style="width:75px"><input style="width:75px" ng-model="x.cost"  type="text" maxlength="8"
+    width=5 value="{{x.cost}}" ></input></td>
+    <td style="width:75px"><input style="width:75px" ng-model="x.highcost"   type="text" maxlength="8"
+    width=5 value="{{x.highcost}}" ></input></td>
+    <td ng-repeat="f in storeArray" ng-if="f.district == 'District Sanat'"><b>{{x[f.storeid].inventory}}</b></td>
+   
+    
+   
+  </tr>
+   </tbody>
+</table>
+<table id="header-fixed"></table>
+</div>
+Add New Product
+<input type="text">
+	
+		
+	
+<script src="/js/stupid.js" ></script>
+</html>
+<style>
+	#the-sticky-div.sticky {
+     position: fixed;
+     top: 0;
+  }
+	body { height: 1000px; }
+#header-fixed { 
+    position: fixed; 
+    top: 0px; display:none;
+    background-color:white;
+}
+
+
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+</style>

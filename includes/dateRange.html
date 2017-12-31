@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+  
+  <script>
+  $( function() {
+    $( "#datepickerstart" ).datepicker();
+  } );
+  $( function() {
+	    $( "#datepickerend" ).datepicker();
+	  } );
+	  var datetoday = new Date();
+	   var thisMonthFormatted = datetoday.getMonth()+1;
+		  if(thisMonthFormatted.length=1){
+			 
+		  }
+		  var thisDateFormatted = datetoday.getDate();
+		  console.log(thisDateFormatted.toString().length);
+		  
+		  if(thisDateFormatted.toString().length==1){
+			  thisDateFormatted = "0"+thisDateFormatted;
+		  }
+		 
+		  $('#datepickerstart').val(thisMonthFormatted+"/"+thisDateFormatted+"/"+datetoday.getFullYear());
+		  getDoorCountList();
+   </script>
+</head>
+<body>
+ 
+<p>Date <input type="text" id="datepickerstart" onchange="onDateChange()"></p>
+<!---<p>End Date: <input type="text" id="datepickerend" onchange="checkDates()"></p>--->
+ 
+</body>
+</html>

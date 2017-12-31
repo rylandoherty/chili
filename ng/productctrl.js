@@ -6,11 +6,13 @@ angular.module('ngViewExample')
 .controller('ProductCtrl', ProductCtrl);
 
 // Inject my dependencies
-ProductCtrl.$inject = ['$routeParams','$scope','$window'];
+ProductCtrl.$inject = ['$routeParams','$scope','$window','ngclipboard'];
 
 // Now create our controller function with all necessary logic
 
-function ProductCtrl($routeParams, $scope, $window) {
+function ProductCtrl($routeParams, $scope, $window, ngclipboard) {
+	$scope.showInStock = false;
+	
 		$scope.getColor = function (name){
 		//var item = $scope.productList[product];
 		var colorArray = [['ROSE GOLD','pink'],['GOLD','#ffc61a'],['GRAY','#999999'],['SILVER','#bfbfbf'],['BLACK','#999999'],['WHITE','#ffffcc'],['MOTXT15','#79d279'],['VERIZON','#E32636']];
@@ -30,16 +32,59 @@ function ProductCtrl($routeParams, $scope, $window) {
 		return "white";
 		}
 	}
+	$scope.getTotalCart = function(){
+    var total = 0;
+    for(var products in $scope.productList){
+        if($scope.productList[products][$scope.storeSelection].addToCart == true){
+        total += ($scope.productList[products][$scope.storeSelection].ordercost);	
+        }
+        
+        
+        
+    }
+    return total;
+}
+	
+	$scope.getDateFromSql= function (time){
+		
+		time = time.substring(5,time.length);
+		var betterSetIt = 0
+		var year = time.substring(betterSetIt,betterSetIt+4);
+		var month = time.substring(betterSetIt+5,betterSetIt+7);
+		var day = time.substring(betterSetIt+8,betterSetIt+10);
+		var hour = time.substring(betterSetIt+11,betterSetIt+13);
+		var minute = time.substring(betterSetIt+14,betterSetIt+16);
+		var d = new Date(year,month-1,day,hour,minute);
+		return d;
+		//2016-11-06 19:14:48'
+	}   //6789012345678901234  
+		
 		$scope.userThing =  $window.userStuff;
 		$scope.productList =  $window.theProductList;
 		$scope.storeArray =   $window.storeList;
 		$scope.totalcost = 0;
+		$scope.uploadRecord = $window.uploadRecord;
+		$scope.uploadTime = new Date (1955,01,01,01,01);
+		$scope.uploadFilename = $window.uploadRecord;
+	for(var uploads in $scope.uploadRecord){
 		
+		if($scope.uploadRecord[uploads].type = 'inventory'){
+			$scope.getDateFromSql($scope.uploadRecord[uploads].time);
+			if($scope.uploadTime < $scope.getDateFromSql($scope.uploadRecord[uploads].time)){
+				$scope.uploadTime = $scope.getDateFromSql($scope.uploadRecord[uploads].time); 
+				//console.log($scope.uploadTime);
+				//console.log("YES");
+				$scope.uploadFilename = $scope.uploadRecord[uploads].filename;
+			}
+			
+		}
+	}
 	
 	for(var stores in $scope.storeArray){
 		
  					$scope.productList[$scope.storeArray[stores].storeid]={};
  					$scope.productList[$scope.storeArray[stores].storeid].ordertotalcost = 0;
+ 					$scope.productList[$scope.storeArray[stores].storeid].totalinstock = 0;
 				}
 	
  	for(var products in $scope.productList){
@@ -52,9 +97,10 @@ function ProductCtrl($routeParams, $scope, $window) {
  					$scope.productList[products][$scope.storeArray[stores].storeid].ordercost = 0;
 				}
 				for(var stock in $scope.productList[products].inventory){
- 				
+ 				$scope.productList[$scope.productList[products].inventory[stock].storename].totalinstock += parseInt($scope.productList[products].inventory[stock].cost.substring(1,$scope.productList[products].inventory[stock].cost.length));
  				if(angular.isDefined($scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory)){
  					$scope.productList[products][$scope.productList[products].inventory[stock].storename].inventory += 1;
+ 					
  				}
  				else
  				{
@@ -98,7 +144,7 @@ function ProductCtrl($routeParams, $scope, $window) {
 		}
 				
 				
-
+//console.log($scope.productList);
 	
 
 	$scope.storeSelection = "";
@@ -106,7 +152,7 @@ function ProductCtrl($routeParams, $scope, $window) {
 	$scope.count=0;
 	
 		$scope.gettotalcosttrueorder = function (store){
-		
+	
 		$scope.productList[store]['ordertotalcost'] = 0;
 		
 		for(var products in $scope.productList){
@@ -211,5 +257,6 @@ function ProductCtrl($routeParams, $scope, $window) {
   	productManagement.productList[product['RQSKU']]['stockFufillHalifax']=productManagement.productList[product['RQSKU']]['stockFufillHalifax']+1;
   	
   }
+  
  
   

@@ -12,6 +12,10 @@ DailyReportCtrl.$inject = ['$routeParams','$scope','$window',];
 
 function DailyReportCtrl($routeParams, $scope, $window) {
 	
+	$scope.getCurrentUserStore();
+	
+	$scope.getListOfSales = function (district){}
+	;
 	$scope.emp = "";
 	$scope.showAllEmployees = false;
 	$scope.invoiceDetailShow = function (invoice){

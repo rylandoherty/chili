@@ -3,7 +3,7 @@ storeDetails = [[0],[0]];
 newLinesFR=0;
 loggedIn = 0;
 saleDetails ="";
-angular.module('ngViewExample', ['ngRoute', 'ngAnimate','myApp'])
+app = angular.module('ngViewExample', ['ngRoute', 'ngAnimate','myApp','fileUpload','ngclipboard'])
 
 .config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
@@ -22,6 +22,29 @@ angular.module('ngViewExample', ['ngRoute', 'ngAnimate','myApp'])
        controllerAs: 'inventory'
        
       })
+      .when('/Admin', {
+      	 templateUrl: '/views/admin.html',
+        
+       
+      })
+      .when('/SetGroups', {
+      	 templateUrl: '/views/setGroups.html',
+        controller: 'AdminCtrl',
+       controllerAs: 'admin'
+       
+      })
+      .when('/SetFormula', {
+      	 templateUrl: '/views/categoryFormula.html',
+        controller: 'AdminCtrl',
+       controllerAs: 'admin'
+       
+      })
+       .when('/DoorCount', {
+      	 templateUrl: '/views/doorCountView.html',
+        controller: 'DoorCountCtrl',
+       controllerAs: 'doorcount'
+       
+      })
       .when('/Order', {
       	 templateUrl: '/views/order.html',
         controller: 'InventoryCtrl',
@@ -35,9 +58,9 @@ angular.module('ngViewExample', ['ngRoute', 'ngAnimate','myApp'])
        
       })
        .when('/Upload', {
-      	 templateUrl: '/views/upload.html',
-        controller: 'DailyReport',
-       controllerAs: 'store'
+      	 templateUrl: '/views/upload.cfm',
+        controller: 'LoginCtrl',
+       controllerAs: 'upload'
        
       })
       

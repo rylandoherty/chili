@@ -34,7 +34,7 @@ $(window).bind("scroll", function() {
     	<tr>
     		
   			<div>{{focus.storeid}}</div>
-  		</button>
+  		
     	
     	<td ng-repeat="x in storeArray" ng-if="x.district == 'District Sanat'"><b>{{x.storeid}}</b></td>
     	

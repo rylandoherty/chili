@@ -1,4 +1,5 @@
 
+
 tr.fixed {
   position: fixed;
   bottom: 0;
@@ -17,6 +18,8 @@ tr.fixed.top {
     display:flex;
     flex-direction: column;
 }
+
+
 .box li { cursor:pointer; }
 #banks .active { color:red; }
 #buttons .active { color:blue; }

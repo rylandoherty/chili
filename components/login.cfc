@@ -4,7 +4,9 @@
 
 	
 	
-	
+	remote any function loadUploads(){
+		return pudding;
+	}
 	remote void function abc(){
 	try { 
     newArtistObj = EntityNew('artists'); 
@@ -38,8 +40,28 @@
 		//var numberStruct =  logic.fixTime();
 		//writeOutput(numberStruct);
 	}
+	remote any function setUser(){
+	try { 
 	
-	
+    cookie_example = structNew(); 
+    cookie_example.name = "userName";
+    cookie_example.value = "homeblahblah"; 
+    cookie_example.expires = "never"; 
+    
+    cookie.mycookie = cookie_example; 
+
+	} catch(Exception ex) { 
+    		WriteOutput("<p>#ex.message#</p>"); 
+		}
+} 
+remote any function getUser(){
+	try { 
+	 
+	return cookie;
+	} catch(Exception ex) { 
+    		WriteOutput("<p>#ex.message#</p>"); 
+		}
+} 
 	remote any function loadStoreStuff(){
 	try { 
 		ormreload();
@@ -57,23 +79,27 @@
 		
 			var dist = storeList[i].getdistrict();
 			if(dist=='District Sanat')
-				userList[arrayLen(userList)+1]= (storeList[i].getuser());
+			userList[arrayLen(userList)+1]= (storeList[i].getuser());
 			storeList[i]['user'] = storeList[i].getuser();
-			storeList[i]['sales'] = storeList[i].getsales();
-			for(var sales in storeList[i]['sales']){
-				sales['saledetails'] = sales.getsaledetails();
-				}
+			
+			
+			//storeList[i]['sales'] = storeList[i].getsales();
+			//for(var sales in storeList[i]['sales']){
+				//sales['saledetails'] = sales.getsaledetails();
+				//}
+				
+				
 		}
-		var rmaList = EntityLoad('rma');
-		var transfersList = EntityLoad('transfers');
-		var receivedList = EntityLoad('received');
-		var comms = EntityLoad('comms');
+		//var rmaList = EntityLoad('rma');
+		//var transfersList = EntityLoad('transfers');
+		//var receivedList = EntityLoad('received');
+		//var comms = EntityLoad('comms');
 		var uploadrecord = EntityLoad('uploadrecord');
-		var receivedInvoice = EntityLoad('receivedInvoice');
+		//var receivedInvoice = EntityLoad('receivedInvoice');
 		
-		for(var i = 1;i<=arrayLen(receivedInvoice);i++){
-			receivedInvoice[i]['store'] = receivedInvoice[i].getstore().getstoreid();
-		}
+		//for(var i = 1;i<=arrayLen(receivedInvoice);i++){
+			//receivedInvoice[i]['store'] = receivedInvoice[i].getstore().getstoreid();
+		//}
 			
 			//writedump(comms);
 		
@@ -83,14 +109,14 @@
 		*/
 		var Glob ={};
 		
-		Glob.userList = userList;
-		Glob.receivedInvoiceList = receivedInvoice;
+		//Glob.userList = userList;
+		//Glob.receivedInvoiceList = receivedInvoice;
 		Glob.storeList = storeList;
 		Glob.productList = productList;
 		//Glob.comms = comms;
-		Glob.rmaList = rmaList;
-		Glob.transfersList = transfersList;
-		Glob.receivedList = receivedList;
+		//Glob.rmaList = rmaList;
+		//Glob.transfersList = transfersList;
+		//Glob.receivedList = receivedList;
 		Glob.uploadRecord = uploadRecord;
 		
 		

@@ -12,8 +12,8 @@
     <cfproperty name="TRADEIN"> 
     <cfproperty name="COMMENTS">
     <cfproperty name="COMM">
-    
- 
+    <cfproperty name="VirtualTerminal">
+    <cfproperty name="Check">
     <cfproperty name="CUSTOMER"> 
     <cfproperty name="EMPLOYEE"> 
 	<cfproperty name="PAID">

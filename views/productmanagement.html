@@ -1,4 +1,4 @@
-
+<html >
 
 <div>
  Search
@@ -14,52 +14,99 @@
   <button ng-click="setTyper('clvznv')">Novatel</button>
   
     <div><table style="float:top;width:40%"></table>
-  <input type="checkbox" ng-model="showHidden" checked="true"> SHOW HIDDEN </input>
+  <input type="checkbox" ng-model="showHidden"> SHOW HIDDEN </input>
+    <input type="checkbox" ng-model="showInStock"> SHOW STOCK ONLY </input>
     <p>
   	
   		<button ng-repeat="focus in storeArray" ng-if="focus.district == 'District Sanat'&&(userThing.level<2||userThing.location==focus.storeid)"  ng-click="setstoreSelection(focus.storeid)"  >
   			<div>{{focus.storeid}}</div>
   		</button>
-  		
-  				
+  		<div>
+  			Total Stock ${{productList[storeSelection].totalinstock}}
+  		</div>
+  		<div>
+  			{{uploadFilename}}
+  		</div>
+  		<div>
+  			{{uploadTime.getFullYear()}}-{{uploadTime.getMonth()+1}}-{{uploadTime.getDate()}}-{{uploadTime.getHours()}}-{{uploadTime.getMinutes()}}
+  		</div>
   		<div style="font-size:25">{{storeSelection}} {{ gettotalcost(storeSelection).toFixed(2) }}</div>
-  		<table>
-  		<tr>
-  		<td>Phone</td>
-  		<td>Order</td>
-  		<td>Cost</td>		
-  		<td>Desired Count</td>		
-  		<td>Current Stock</td>
-  				
-  		</tr>
-  		<tr ng-repeat="abc in productList" ng-if="abc[storeSelection].order>0" ng-init="">
-  			`
-  			<td><div>{{abc.name}}</div></td>
-  			<td> <input style="width:75px" ng-model="abc[storeSelection].trueorder" ng-change="changeOrder(abc,storeSelection, abc[storeSelection].trueorder)"  type="number" maxlength="2"
-    width=5 value="{{abc[storeSelection].trueorder}}" ></input> </td>
-  			
-  			<td><div>{{abc[storeSelection].ordercost}}</div></td>
-  			<td><div>{{abc[storeSelection].settings}}</div></td>
-  			<td><div>{{abc[storeSelection].inventory}}</div></td>
-  			
-  		</tr>
-  		
-  		
+  		<button class="btn" ngclipboard data-clipboard-target="#gotobedontime" >
+		   CopyThing
+			</button>
+  		<table id="gotobedontime"   >
+  			<thead>
+  				<tr>
+  					<th> Phone </th>
+  					<th> Order </th>
+  					<th> Cost </th>
+  				</tr>
+  			</thead>
+  			<tbody>
+  				<tr  ng-repeat="abc in productList" ng-if="abc[storeSelection].addToCart" ng-init="">
+  					<td >{{abc.name}} </td>
+  					<td >{{abc[storeSelection].trueorder}} </td>	
+  					<td >{{abc[storeSelection].ordercost}} </td>
+  				</tr>
+  			</tbody>
   		</table>
+  		<td>Total: {{ getTotalCart() }}</td>
+  		
+<div class="tablestuff2 table">
+<table border="1">
+<thead>
+<tr>	
+		<th id="th1">Checkbox</td>
+		<th id="th1">Phone</td>
+  		<th id="th2">Order</th>
+  		<th id="th3">Cost</th>		
+  		<th id="th4">Desired Count</th>		
+  		<th id="th5">Current Stock</th>
+  		<th id="th{{x.storeid}}"ng-repeat="x in storeArray" ng-if="x.district == 'District Sanat'"><b>{{x.storeid}}</b></th>
+
+</tr>
+</thead>
+
+
+<tbody>
+	<tr ng-repeat="abc in productList" ng-if="abc[storeSelection].order>0" ng-init="">
+  			<td > <input type="checkbox" ng-model= "abc[storeSelection].addToCart">  </input> </td>
+  			<td headers="th1"><div>{{abc.name}}</div></td>
+  			<td headers="th2"> <input style="width:75px" ng-model="abc[storeSelection].trueorder" ng-change="changeOrder(abc,storeSelection, abc[storeSelection].trueorder)"  type="number" maxlength="2"
+   			 width=5 value="{{abc[storeSelection].trueorder}}" ></input> </td>
+  			
+  			<td headers="th3"><div>{{abc[storeSelection].ordercost}}</div></td>
+  			<td headers="th4"><div>{{abc[storeSelection].settings}}</div></td>
+  			<td headers="th5"><div>{{abc[storeSelection].inventory}}</div></td>
+  			<td headers="th{{f.storeid}}" ng-repeat="f in storeArray" ng-if="f.district == 'District Sanat'"><b>{{abc[f.storeid].inventory}}</b></td>
+  		</tr>
+  		
+	
+	
+	
+</tbody>
+</table>
+</div>
+  		
    </p>
   <table>
+  	<thead >
   	<tr >
   		<b>
-  	<td><b>SKU </b></td>
-  	<td style="width:150px" ><b>Name </b></td>
-  	<td><b>Hidden</b></td>
-  	<td><b>In<br>Stock<br></b></td>
-    <td><b>Desired<br>Count<br></b></td>	
+  	<th><b> SKU </b></td>
+  	<th style="width:150px" ><b>Name  </b></td>
+  	<th><b>Hidden</b></td>
+  	<th><b>In<br>Stock<br></b></td>
+    <th><b>Desired<br>Count<br></b></td>	
 
-  	<td style="width:75px"><b>Cost</b></td>
+  	<th style="width:75px"><b>Low</b></td>
+  	<th style="width:75px"><b>High</b></td>
+  	
     </b>
     </tr>
-  <tr  ng-repeat="x in productList | filter:typer|orderBy:'toString()'" ng-if="x['hidden']!=true||showHidden==true" >
+    </thead>
+    <tbody>
+  <tr  ng-repeat="x in productList | filter:typer|orderBy:'toString()'" ng-if="(x['hidden']!=true||showHidden==true)&&(showInStock==false||x[storeSelection].inventory>0)" >
   	<td>{{ x['RQSKU']}}</td>
   	
   	<td  ng-style=" { 'background-color': x['color']}"> {{ x['name']}}</td>
@@ -68,21 +115,47 @@
     <td> <input style="width:75px" ng-model="x[storeSelection].settings" ng-change="changeDesired(x.RQSKU, storeSelection , x[storeSelection].settings)"  type="number" maxlength="2"
     width=5 value="{{x[storeSelection].settings}}" ></input> </td>
    
-    <td style="width:75px"><input style="width:75px" ng-model="x.cost" ng-change="changeCost(x.RQSKU ,storeSelection, x.cost)"  type="text" maxlength="8"
+    <td style="width:75px"><input style="width:75px" ng-model="x.cost"  type="text" maxlength="8"
     width=5 value="{{x.cost}}" ></input></td>
+    <td style="width:75px"><input style="width:75px" ng-model="x.highcost"   type="text" maxlength="8"
+    width=5 value="{{x.highcost}}" ></input></td>
     
    
     
    
   </tr>
-   
+   </tbody>
 </table>
+<table ></table>
 </div>
 Add New Product
 <input type="text">
-
+	
+		
+	
+<script src="/js/stupid.js" ></script>
+</html>
 <style>
+	
+	.tablestuff2 thead {
+     display: table-header-group;
+}
+	
+	
+	#the-sticky-div.sticky {
+     position: fixed;
+     top: 0;
+  }
+	body { height: 1000px; }
+#header-fixed { 
+    position: fixed; 
+    top: 0px; display:none;
+    background-color:white;
+}
+
+
 table, th , td  {
+	
   border: 1px solid grey;
   border-collapse: collapse;
   padding: 5px;

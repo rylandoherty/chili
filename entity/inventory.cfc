@@ -5,7 +5,7 @@
     <cfproperty name="name"> 
     <cfproperty name="storename"> 
     <cfproperty name="productsku"> 
-    <cfproperty name="cost"> 
+    <cfproperty name="cost">
      <cfproperty name="store" fieldtype="many-to-one" cfc="store" >
       
    

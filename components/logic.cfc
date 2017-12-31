@@ -3,73 +3,204 @@
 	<cfscript>
 	
 		remote any function testGet(){
-			var orderSetting = entityLoad("ordersettings");
-			for(var settings in orderSetting){
-			writedump(settings.getproductlist().getRQSKU());
-		
-			}
-			writedump(orderSetting[1].getstore().getstoreid());
+			Form.shouldntnamethingsthislol = "testing";
 	    					
 	    					
 		}
-		private any function moneyReplace(number){
-			 							return Replace(Replace(Replace(Replace(number,"$",""), "(" , "-" ),")","" ),",","");
-			    				}
+		remote any function loadspreadsheet(filename){
+			
+			xls = SpreadsheetRead('C:\ColdFusion10\cfusion\wwwroot\chilipos\components\savestuff\'&filename&'.xls');
+			//queryService = new query(); 
+			 //queryService.setDatasource(xls); 
+    		//result = queryService.execute(sql="SELECT * "); 
+			
+			
+			
+			//return SerializeJson(result);
+	    if(filename CONTAINS "Inventory Listing"){
+			logic = createObject("component", "logic");
+			logic.setInventory(xls , filename);
+		}
+		else if(filename CONTAINS "Product Detail"){
+			logic = createObject("component", "logic");
+			logic.setPDR(xls , filename);
+		}
+		else if(filename CONTAINS "RMA History Report"){
+			logic = createObject("component", "logic");
+			logic.setRMAHistory(xls , filename);
+		}
+		else if(filename CONTAINS "Transfer History"){
+				 logic = createObject("component", "logic");
+				numberStruct =  logic.setTransfer(xls , filename);
+		}
+		else if(filename CONTAINS "Receiving Invoices History Report"){
+			
+				 //logic = createObject("component", "logic");
+				numberStruct =  setReceived(xls , filename);
+				
+				
+		}
+		if(masterfile.serverFile CONTAINS "Payment Type Audit Report"){
+				 
+		}
+		if(masterfile.serverFile CONTAINS "PDR"){
+				 
+		}
+		if(filename CONTAINS "Sales By Invoice"){
+			logic = createObject("component", "logic");
+			logic.organizeSales(xls , filename); 
+		}
+	    					return "alldone";
+		}
 		
-		public any function organizeSales(PDRData,PaymentData,PDRfile,Paymentfile){
+		
+		
+		private any function moneyReplace(number){
+				return Replace(Replace(Replace(Replace(number,"$",""), "(" , "-" ),")","" ),",","");
+		}
+		public void function setPTA(PTAData, PTAFile){
+			    
+		}
+		public void function setSBI(SBIData, SBIFile){
+			
+		}
+		public void function setPDR(PDRData, PDRFile){
+			var uploadStuff = EntityNew('uploadrecord');
+			uploadStuff.settype('sales');
+			uploadStuff.settime(Now());
+			uploadStuff.setfilename(PDRfile);
+			entitySave(uploadStuff);
+			wsPublish("debugging", "really funny");
+			var countofArray = 0;
+			application.uploadCount = 0;
+					for(var item in PDRData){
+						countofArray += 1;
+					}
+			wsPublish("uploads", application.uploadCount&"--"&countofArray);
+			for(var items in PDRData){
+				application.uploadCount = LSParseNumber(application.uploadCount) + 1;
+				
+				wsPublish("uploads", application.uploadCount&"--"&countofArray);
+				
+				var theInvoice = entityLoad( "sales", items['Invoice ##'] , true );
+				if(items['Invoiced By']!='Invoiced By'&&len(items['Invoiced By'])){
+				if(!isDefined("theInvoice")){
+			    				
+			    				var newSale = EntityNew('sales');
+			    				var storeQuery = entityLoad( "store", items['Invoiced By'] , true );
+			    				var employeeQuery = entityLoad( "user", items['Sold By'] , true );
+			    				 newSale.setsalesid(items['Invoice ##']);
+			    				 
+							   newSale.setEMPLOYEE(items['Sold By']);
+							  
+							   newSale.setDATE(fixtime(items['Sold On'])); 
+							    
+								EntitySave(newSale);
+								ormflush();
+								theInvoice = EntityLoad('sales',items['Invoice ##'],true);
+								storeQuery.addsales(theInvoice);
+		    						employeeQuery.addsales(theInvoice);
+		    						entitySave(storeQuery);
+		    						entitySave(employeeQuery);
+								
+	   								
+	   								}
+	   								//wsPublish("uploads", application.uploadCount&"--"&countofArray);
+	   								
+	   								//wsPublish("uploads", application.uploadCount&"--"&countofArray);
+	   								
+				
+					
+					var newProductSold = EntityNew('saledetails');
+					
+					
+					newProductSold.setPRODUCTSKU(items['Product SKU']);
+					newProductSold.setCATEGORY(items['Category']);
+					newProductSold.setTRACKINGNUMBER(items['Tracking ##']);
+					newProductSold.setCONTRACTNUMBER(items['Contract ##']);
+					newProductSold.setPRODUCTNAME(items['Product Name']);
+					
+					newProductSold.setREFUND(items['Refund']);
+					newProductSold.setQUANTITY(items['Qty']);
+				
+					newProductSold.setTOTALCOST(moneyReplace(items['Total Cost']));
+					newProductSold.setSOLDFOR(moneyReplace(items['Sold For']));
+					
+					newProductSold.setGROSSPROFIT(moneyReplace(items['Gross Profit']));
+					
+					EntitySave(newProductSold);
+					
+					ormflush();
+					theInvoice.addsaledetails(newProductSold);
+					entitySave(theInvoice);
+					ormflush();
+					
+					}
+			}
+			
+			
+		}
+		public any function organizeSales(SBIData,SBIFile){
 			
 			  var uploadStuff = EntityNew('uploadrecord');
 			  
-				  uploadStuff.settype('sales');
+				  uploadStuff.settype('salesbyinvoice');
 				  
 				  uploadStuff.settime(Now());
-				  
-				  uploadStuff.setfilename(PDRfile);
+				  var countofArray = 0;
+					for(var item in SBIData){
+						countofArray += 1;
+						}
+				 wsPublish("uploads", application.uploadCount&"--"&countofArray);
 				  entitySave(uploadStuff);
-			  for(var sales in PaymentData){
+			  for(var sales in SBIData){
+			  	application.uploadCount = LSParseNumber(application.uploadCount) + 1;
+			  	wsPublish("uploads", application.uploadCount&"--"&countofArray);
+			  	
 	    		if(sales['Invoice ##']!='Invoice ##'&&len(sales['Invoice ##'])){
 	    			
 		    			try { 
+		    					//wsPublish("uploads", "ebvenm");
 		    				var theInvoice = entityLoad( "sales", sales['Invoice ##'] , true );
-		    				var storeQuery = entityLoad( "store", sales['location'] , true );
-		    				var employeeQuery = entityLoad( "user", sales['Primary Username'] , true );
+		    				var storeQuery = entityLoad( "store", sales['Invoiced At'] , true );
+		    				var employeeQuery = entityLoad( "user", sales['Sold By'] , true );
+		    				
 	    					if(!isDefined("storeQuery")){
-	    						var store = EntityNew('store');
-	    						store.setstoreid(sales['location']);
+	    						store.setstoreid(sales['Invoiced At']);
 	    						store.setregion(sales['Region']);
 	    						store.setdistrict(sales['District']);
 	    						EntitySave(store);
 	    						ormflush();
-	    						storeQuery = entityLoad( "store", sales['location'] , true );
+	    						storeQuery = entityLoad( "store", sales['Invoiced At'] , true );
 	    						}
 	    					if(!isDefined("employeeQuery")){
 	    						var user = EntityNew('user');
-	    						user.setuserid(sales['Primary Username']);
+	    						user.setuserid(sales['Sold By']);
 	    						user.setpassword("Verizon1234");
 	    						user.setlevel(3);
-	    						
 	    						EntitySave(user);
 	    						ormflush();
 	    						storeQuery.adduser(user);
 	    						EntitySave(storeQuery);
-	    						employeeQuery = entityLoad( "user", sales['Primary Username'] , true );
+	    						employeeQuery = entityLoad( "user", sales['Sold By'] , true );
 	    						}
+	    						
 		    				if(!isDefined("theInvoice")){
-			    				
-			    				
+			    				//wsPublish("uploads", "what the fuck");
 			    				newSale = EntityNew('sales');
-			    				
-			    				newSale.setsalesid(sales['Invoice ##']);
-							    newSale.setEMPLOYEE(sales['Primary Username']);
-							    newSale.setTYPE(sales['Type']); 
+			    				 newSale.setsalesid(sales['Invoice ##']);
+							   newSale.setEMPLOYEE(sales['Sold By']);
+							   newSale.setCUSTOMER(moneyReplace(sales['Customer']));
+							   newSale.setCOMMENTS(sales['Invoice Comments']); 
+							   newSale.setDATE(fixtime(sales['Created On'])); 
+							      newSale.setCOMM(moneyReplace(sales['Ven Reb Act']));
 							   
-							    newSale.setDATE(fixtime(sales['Created On'])); 
-							    newSale.setCOMM(moneyReplace(sales['Ven Reb Act']));
-							    newSale.setFINANCED(moneyReplace(sales['VZW DEVICE PAYMENT AMT.'])); 
-							    newSale.setCASH(moneyReplace(sales['Cash'])); 
-			    				newSale.setDATASCAPE(moneyReplace(sales['Datascape Cash only']));
-			    					
-								newSale.setCARDS(
+							     newSale.setCASH(moneyReplace(sales['Cash'])); 
+							     newSale.setVirtualTerminal(moneyReplace(sales['Virtual Terminal']));
+							   
+							    
+			    				//if (IsDefined("sales['Datascape Cash only']")) newSale.setDATASCAPE(moneyReplace(sales['Datascape Cash only']));
+			    				newSale.setCARDS(
 									moneyReplace(sales['MasterCard-Integrated'])+
 									moneyReplace(sales['Discover-Integrated'])+
 									moneyReplace(sales['AMEX-Integrated'])+
@@ -78,35 +209,9 @@
 								//newSale.setTRADEIN(moneyReplace(sales['Phone Trade In Store']));
 								EntitySave(newSale);
 								ormflush();
-								thisSale = EntityLoad('sales',sales['Invoice ##'],true);
-									for(var items in PDRData){
-										if(items['Invoice ##']!='Invoice ##'&&len(items['Invoice ##'])&&items['Invoice ##']==sales['Invoice ##']){
-											newProductSold = EntityNew('saledetails');
-											
-												thisSale.setCOMMENTS(items['Invoice Comments']);
-											
-											
-												thisSale.setCUSTOMER(items['Customer']);
-											
-											
-											newProductSold.setPRODUCTSKU(items['Product SKU']);
-											newProductSold.setCATEGORY(items['Category']);
-											newProductSold.setTRACKINGNUMBER(items['Tracking ##']);
-											newProductSold.setCONTRACTNUMBER(items['Contract ##']);
-											newProductSold.setPRODUCTNAME(items['Product Name']);
-											newProductSold.setREFUND(items['Refund']);
-											newProductSold.setQUANTITY(items['Qty']);
-											newProductSold.setTOTALCOST(moneyReplace(items['Total Cost']));
-											newProductSold.setSOLDFOR(moneyReplace(items['Sold For']));
-											newProductSold.setGROSSPROFIT(moneyReplace(items['Sold For'])-moneyReplace(items['Total Cost']));
-											EntitySave(newProductSold);
-											ormflush();
-											thisSale.addsaledetails(newProductSold);
-											entitySave(thisSale);
-											ormflush();
-											
-											}
-	   								}
+								
+								
+								
 	   								thisSale = EntityLoad('sales',sales['Invoice ##'],true);
 	   								storeQuery.addsales(thisSale);
 		    						employeeQuery.addsales(thisSale);
@@ -480,7 +585,17 @@
 			
 			
 			
-			public any function setReceived(ReceivedData,filename){
+			remote any function setReceived(ReceivedData,filename){
+				 Session.shouldntnamethingsthislol = "Loading";
+				 
+				 /*httpService = new http(); 
+     //set attributes using implicit setters  
+    			httpService.setMethod("post"); 
+				 httpService.setUrl("/views/upload.cfm");
+				  
+				  httpService.addParam(type="formfield",name="Slug",value="heytrythat"); 
+				  result = httpService.send().getPrefix();*/
+				   
 				 var uploadStuff = EntityNew('uploadrecord');
 				  uploadStuff.settype('Received');
 				  uploadStuff.settime(Now());
@@ -539,13 +654,15 @@
 	    			}
 	    			
 	    			}
-    			
-    					
+    			return "lol";
+    					 Form.shouldntnamethingsthislol = "All Done";
     					
 				
 			} 
 			public any function setTransfer(TransferData,filename){
 				 var uploadStuff = EntityNew('uploadrecord');
+				 
+				 getPageContext().getOut().flush();
 				  uploadStuff.settype('Transfer');
 				  uploadStuff.settime(Now());
 				  uploadStuff.setfilename(filename);
@@ -610,7 +727,7 @@
     			
     					
     					
-				
+				writeOutput("Done");
 			} 
 			
 			
@@ -625,14 +742,22 @@
 				  entitySave(uploadStuff);
 				 var oldStock = EntityLoad('inventory');
 				for(var i = 1;i<=arrayLen(oldStock);i++){
-					entityDelete(oldStock[i]);
+					entityDelete(oldStock[i]); 
 				}
 				ormFlush();
 				ormreload();
 				
-					
+					//var publishString = arrayLen(inventoryData);
+					var countofArray = 0;
+					for(var item in inventoryData){
+						countofArray += 1;
+						}
 					
 								for(var item in inventoryData){
+									application.uploadCount = LSParseNumber(application.uploadCount) + 1;
+									
+									wsPublish("uploads", application.uploadCount&"--"&countofArray);
+									
 									var found= false;
     			if(item['Product Name']!='Product Name'&&len(item['Product Name'])){
 	    			
@@ -665,10 +790,25 @@
 							    	productList.sethidden(false);
 							    	productList.setcategory(item['Category']); 
 							    	
-								   productList.setcost(item['Total Cost']);
-								   
+								   productList.setcost(replace(item['Total Cost'],"$",""));
+								   productList.sethighcost(item['Total Cost'],"$","");
 							    	EntitySave(productList); 
 							    	ormflush();
+	    					}
+	    					else if(find("$",productList.getcost())==1){
+	    						productList.setcost(replace(productList.getcost(),"$",""));
+	    						EntitySave(productList); 
+	    						ormflush();
+	    					}
+	    					else if(replace(productList.getcost(),"$","") < replace(item['Total Cost'],"$","") ){
+	    						productList.sethighcost(replace(item['Total Cost'],"$",""));
+	    						EntitySave(productList); 
+	    						ormflush();
+	    					}
+	    					else if(replace(productList.getcost(),"$","") > replace(item['Total Cost'],"$","")){
+	    						productList.setcost(replace(item['Total Cost'],"$",""));
+	    						EntitySave(productList); 
+	    						ormflush();
 	    					}
 	    					if(found==false){
 	    							orderSetting = EntityNew('ordersettings');
@@ -716,7 +856,7 @@
 	    			}
 	    			
 	    			}
-    			
+    			application.uploadCount = 0;
     					
     					
 				
@@ -1010,18 +1150,18 @@
 		
 		remote any function fixTime(xx){
 			var dateRQ = xx;
-			var codeMonth = [["Jan",00],
-					["Feb",01],
-					["Mar",02],
-					["Apr",03],
-					["May",04],
-					["Jun",05],
-					["Jul",06],
-					["Aug",07],
-					["Sep",08],
-					["Oct",09],
-					["Nov",10],
-					["Dec",11]];
+			var codeMonth = [["Jan",01],
+					["Feb",02],
+					["Mar",03],
+					["Apr",04],
+					["May",05],
+					["Jun",06],
+					["Jul",07],
+					["Aug",08],
+					["Sep",09],
+					["Oct",10],
+					["Nov",11],
+					["Dec",12]];
 			 
 			var dateArray= [];
 			var month ="";

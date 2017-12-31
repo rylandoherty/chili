@@ -9,6 +9,7 @@
     <cfproperty name="icon">  
     <cfproperty name="ordersettings" fieldtype="one-to-many" cfc="ordersettings" fkcolumn="RQSKU">
     <cfproperty name="cost">
+    <cfproperty name="highcost">
      
     
    

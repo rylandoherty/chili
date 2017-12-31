@@ -47,16 +47,17 @@ function Ctrl2($scope, sharedProperties) {
 	$window.userTag =userid.value;
 	storeStuff = e.loadStoreStuff();
 	//$window.commList = storeStuff.COMMS;
-	$window.receivedList = storeStuff.RECEIVEDLIST;
-	$window.rmaList = storeStuff.RMALIST;
-	$window.transfers = storeStuff.TRANSFERSLIST;
+	//$window.receivedList = storeStuff.RECEIVEDLIST;
+	//$window.rmaList = storeStuff.RMALIST;
+	//$window.transfers = storeStuff.TRANSFERSLIST;
 	$window.theProductList = storeStuff.PRODUCTLIST;
 	$window.storeList = storeStuff.STORELIST;
 	$window.uploadRecord = storeStuff.UPLOADRECORD;
-	$window.receivedInvoiceList = storeStuff.RECEIVEDINVOICELIST; 
-	$window.userList = storeStuff.USERLIST;
-	$window.userQuery = storeStuff.USERLIST;
-	console.log(storeStuff);
+	//$window.receivedInvoiceList = storeStuff.RECEIVEDINVOICELIST; 
+	//$window.userList = storeStuff.USERLIST;
+	//$window.userQuery = storeStuff.USERLIST;
+	
+	
 	
 	
 	}

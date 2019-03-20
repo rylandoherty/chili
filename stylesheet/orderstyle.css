@@ -1,0 +1,110 @@
+
+.TotalBox {
+	
+    
+   
+    float:left;
+    height: 90vh;
+    width: 100vw;
+    border: solid;
+    overflow: hidden;
+}	
+	
+.LeftRegion {
+    
+    
+    
+    float:left;
+    height: 80vh;
+    width: 26vw;
+    
+}
+.LeftRegion .MainOption{
+	
+    display: inline;
+    
+    
+    height: 10%;
+    width:auto;
+      border:solid;
+}
+.LeftRegion .Categories{
+	
+    
+    margin: 0%;
+    height: 80%;
+    width:auto;
+      border:solid;
+}
+.LeftRegion .Datafeed{
+	
+    
+    margin: 0%;
+    height: 30%;
+    width:auto;
+      border:solid;
+}
+.LeftRegion .Categories .Buttons{
+	
+	 vertical-align:top;
+	 
+	 margin:5px;
+	 min-width:80px;
+	 min-height:80px;
+	  max-width:80px;
+	 max-height:80px;
+	 overflow-y:hidden;
+	 overflow-x:hidden;
+	 
+	 
+}  
+.LeftRegion .Categories .SelectedButton{
+	
+}  
+.LeftRegion .CartSummary{
+	position: relative;
+    display: block;
+    
+    
+    height: 24%;
+    width:auto;
+    border:solid;
+}
+
+
+
+.SecondRegion {
+    float:left;
+    display:inline;
+    
+   
+    height: 95%;
+    width: 63%;
+      
+}
+
+.SecondRegion .Options {
+	
+    
+    
+    height: 28%;
+    width:auto;
+      border:solid;
+}
+.SecondRegion .MainListing {
+	
+    
+    overflow-y:scroll;
+    height: 72%;
+    width:auto;
+      border:solid;
+}
+.SecondRegion .CartListing {
+	
+    overflow-y:scroll;
+    
+    height: 25%;
+    width:auto;
+      border:solid;
+}
+
